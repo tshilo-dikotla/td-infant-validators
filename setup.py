@@ -18,10 +18,10 @@ setup(
     include_package_data=True,
     url='https://github.com/tshilo-dikotla/td-infant-validators',
     license='GPL license, see LICENSE',
-    description='Tshilo Dikotla.',
+    description='Tshilo Dikotla Infant Validators.',
     long_description=README,
     zip_safe=False,
-    keywords='django tshilo dikotla',
+    keywords='django tshilo dikotla infant validators',
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',
