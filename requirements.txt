@@ -1,3 +1,5 @@
+git+https://github.com/botswana-harvard/edc-base.git@develop#egg=edc_base
+git+https://github.com/botswana-harvard/edc-constants.git@develop#egg=edc_constants
 git+https://github.com/botswana-harvard/edc-form-validators.git@develop#egg=edc_form_validators
 git+https://github.com/tshilo-dikotla/td-infant.git@develop#egg=td_infant
 git+https://github.com/botswana-harvard/edc-base.git@develop#egg=edc_base
