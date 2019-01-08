@@ -43,6 +43,12 @@ class InfantArvProphFormValidator(FormValidator):
                     'The azt discharge supply in Infant Birth arv was not'
                     ' answered as UNKNOWN, Q3 cannot be Unknown.')
 
+    def validate_taking_arv_proph_no(self):
+        cleaned_data = self.cleaned_data
+        if cleaned_data.get('prophylatic_nvp') == NO:
+            raise forms.ValidationError(
+                {'prophylatic_nvp': 'Infant is HEU, answer cannot be No.'})
+
     def validate_taking_arv_proph_yes(self):
         cleaned_data = self.cleaned_data
         arv_proph_mod = self.data.get(
