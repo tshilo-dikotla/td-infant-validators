@@ -20,24 +20,25 @@ def get_birth_arv_visit_2000(infant_identifier):
     except InfantBirthArv.DoesNotExist:
         pass
 
-
-return NOT_APPLICABLE
+    return NOT_APPLICABLE
 
 
 class InfantArvProphFormValidator(FormValidator):
 
     def clean(self):
+
         cleaned_data = self.cleaned_data
         if cleaned_data.get('prophylatic_nvp') == NO:
             raise forms.ValidationError(
                 {'prophylatic_nvp': 'Infant is HEU, answer cannot be No.'})
         self.validate_taking_arv_proph_unknown()
+        self.validate_taking_arv_proph_no()
 
     def validate_taking_arv_proph_unknown(self):
         cleaned_data = self.cleaned_data
         infant_identifier = cleaned_data.get('infant_visit').subject_identifier
-        if cleaned_data.get('prophylatic_nvp') == UNKNOWN and
-        cleaned_data.get('arv_status') not in ['modified']:
+        if cleaned_data.get('prophylatic_nvp') == UNKNOWN and \
+                cleaned_data.get('arv_status') not in ['modified']:
             if get_birth_arv_visit_2000(infant_identifier) not in [UNKNOWN]:
                 raise forms.ValidationError(
                     'The azt discharge supply in Infant Birth arv was not'
@@ -46,6 +47,8 @@ class InfantArvProphFormValidator(FormValidator):
     def validate_taking_arv_proph_no(self):
         cleaned_data = self.cleaned_data
         if cleaned_data.get('prophylatic_nvp') == NO:
+            self._errors.update(
+                {'prophylatic_nvp': 'Infant is HEU, answer cannot be No.'})
             raise forms.ValidationError(
                 {'prophylatic_nvp': 'Infant is HEU, answer cannot be No.'})
 
@@ -61,4 +64,3 @@ class InfantArvProphFormValidator(FormValidator):
                 raise forms.ValidationError(
                     {'arv_status': 'Infant never started prophlaxis, do not complete '
                      'the infant arv proph mods table.'})
-

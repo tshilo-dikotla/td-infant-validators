@@ -23,8 +23,8 @@ class InfantArvFormValidator(FormValidator):
             YES,
             field='sdnvp_after_birth',
             field_required='nvp_dose_date',
-            required_msg=('If infant has received single dose NVP then provide '
+            required_msg=('If infant has received single dose NVP then provide'
                           'NVP date.'),
-            not_required_msg=('Participant indicated that NVP was NOT provided. '
+            not_required_msg=('Participant indicated that NVP was NOT provided'
                               'You cannot provide date of first dose.')
         )

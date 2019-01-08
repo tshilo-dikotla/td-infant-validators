@@ -11,10 +11,11 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+from td_infant.settings import AUTO_CREATE_KEYS
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+APP_NAME = 'td_infant_validators'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -27,17 +28,22 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+AUTO_CREATE_KEYS = True
 # Application definition
+
+ETC_DIR = '/etc'
 
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    'django.contrib.sites',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'td_infant_validators'
+    'edc_base.apps.AppConfig',
+    'td_infant_validators.apps.AppConfig',
+
 ]
 
 MIDDLEWARE = [
