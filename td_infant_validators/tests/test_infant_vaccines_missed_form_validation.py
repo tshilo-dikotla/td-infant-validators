@@ -46,6 +46,32 @@ class TestVaccinesMissedFormValidator(TestCase):
         except ValidationError as e:
             self.fail(f'ValidationError raised unexpectedly. Got{e}')
 
+    def test_infant_fu_immunization_vaccine_missed_no_name_invalid(self):
+        self.infant_fu_immunizations.vaccines_missed = NO
+        self.infant_fu_immunizations.save()
+        cleaned_data = {
+            'infant_fu_immunizations': self.infant_fu_immunizations,
+            'missed_vaccine_name': 'Polio',
+        }
+        form_validator = VaccinesMissedFormValidator(
+            cleaned_data=cleaned_data)
+        self.assertRaises(ValidationError, form_validator.validate)
+        self.assertIn('missed_vaccine_name', form_validator._errors)
+
+    def test_infant_fu_immunization_vaccine_missed_no_name_none(self):
+        self.infant_fu_immunizations.vaccines_missed = NO
+        self.infant_fu_immunizations.save()
+        cleaned_data = {
+            'infant_fu_immunizations': self.infant_fu_immunizations,
+            'missed_vaccine_name': None,
+        }
+        form_validator = VaccinesMissedFormValidator(
+            cleaned_data=cleaned_data)
+        try:
+            form_validator.validate()
+        except ValidationError as e:
+            self.fail(f'ValidationError raised unexpectedly. Got{e}')
+
     def test_missed_vaccine_name_given_reason_required(self):
         cleaned_data = {
             'infant_fu_immunizations': self.infant_fu_immunizations,

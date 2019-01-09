@@ -10,13 +10,14 @@ class VaccinesMissedFormValidator(FormValidator):
         self.validate_missed_vaccine_fields(cleaned_data=self.cleaned_data)
 
     def validate_vaccine_missed(self, cleaned_data=None):
-        if cleaned_data.get('infant_fu_immunizations').vaccines_missed == YES:
-            if not cleaned_data.get('missed_vaccine_name'):
-                msg = {'missed_vaccine_name':
-                       'You mentioned that vaccines were missed. Please '
-                       'indicate which ones on the table.'}
-                self._errors.update(msg)
-                raise ValidationError(msg)
+        condition = cleaned_data.get(
+            'infant_fu_immunizations').vaccines_missed == YES
+        self.required_if_true(
+            condition,
+            field_required='missed_vaccine_name',
+            required_msg=('You mentioned that vaccines were missed. Please '
+                          'indicate which ones on the table.'),
+        )
 
     def validate_missed_vaccine_fields(self, cleaned_data=None):
         self.required_if_not_none(
