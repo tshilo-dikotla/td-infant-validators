@@ -26,6 +26,19 @@ class InfantArvProph(models.Model):
     pass
 
 
+class InfantFuPhysical(models.Model):
+
+    infant_visit = models.OneToOneField(InfantVisit, on_delete=PROTECT)
+
+    height = models.DecimalField(
+        max_digits=6,
+        decimal_places=2,)
+
+    head_circumference = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,)
+
+
 class RegisteredSubject(BaseUuidModel):
 
     subject_identifier = models.CharField(
