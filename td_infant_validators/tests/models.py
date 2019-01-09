@@ -1,6 +1,6 @@
 from django.db import models
 from django.db.models.deletion import PROTECT
-from edc_base.model_mixins import BaseUuidModel
+from edc_base.model_mixins import BaseUuidModel, ListModelMixin
 from edc_constants.choices import YES_NO_UNKNOWN_NA
 from edc_base.utils import get_utcnow
 from edc_registration.model_mixins import UpdatesOrCreatesRegistrationModelMixin
@@ -85,3 +85,13 @@ class InfantBirth(BaseUuidModel):
         unique=True)
 
     dob = models.DateField()
+
+
+class Foods (ListModelMixin, BaseUuidModel):
+
+    class Meta:
+        app_label = 'td_infant_validators'
+        verbose_name = "Foods"
+
+
+verbose_name_plural = "Foods"
