@@ -15,7 +15,7 @@ class TestInfantBirthExamFormValidator(TestCase):
         appointment = Appointment.objects.create(
             subject_identifier=subject_identifier,
             appt_datetime=get_utcnow(),
-            visit_code='1000')
+            visit_code='2000')
         self.infant_visit = InfantVisit.objects.create(
             subject_identifier=appointment.subject_identifier,
             appointment=appointment)

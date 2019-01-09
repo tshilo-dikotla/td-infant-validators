@@ -5,3 +5,4 @@ from .infant_fu_dx_form_validation import InfantFuDxItemsFormValidator
 # from .infant_vaccines_received_form_validation import VaccinesReceivedFormValidator
 from .infant_vaccines_missed_form_validation import VaccinesMissedFormValidator
 from .infant_birth_data_form_validation import InfantBirthDataFormValidator
+from .infant_fu_physical_form_validation import InfantFuPhysicalFormValidator
