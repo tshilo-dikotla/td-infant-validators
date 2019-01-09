@@ -3,6 +3,7 @@ from django.db.models.deletion import PROTECT
 from edc_base.model_mixins import BaseUuidModel
 from edc_constants.choices import YES_NO_UNKNOWN_NA
 from edc_base.utils import get_utcnow
+from edc_registration.model_mixins import UpdatesOrCreatesRegistrationModelMixin
 
 
 class Appointment(BaseUuidModel):
@@ -32,3 +33,42 @@ class InfantBirthArv(models.Model):
         choices=YES_NO_UNKNOWN_NA,
         verbose_name="Was the infant discharged with a supply of AZT? ",
         help_text="if infant not yet discharged, please enter 'Not applicable'")
+
+
+class RegisteredSubject(BaseUuidModel):
+
+    subject_identifier = models.CharField(
+        max_length=50,
+        unique=True)
+
+    relative_identifier = models.CharField(
+        max_length=36,
+        null=True,
+        blank=True)
+
+
+class MaternalConsent(UpdatesOrCreatesRegistrationModelMixin, BaseUuidModel):
+
+    subject_identifier = models.CharField(max_length=25)
+
+    consent_datetime = models.DateTimeField()
+
+    dob = models.DateField()
+
+
+class InfantFuImmunizations(models.Model):
+
+    infant_visit = models.OneToOneField(InfantVisit, on_delete=PROTECT)
+
+    vaccines_received = models.CharField(max_length=25)
+
+    vaccines_missed = models.CharField(max_length=25)
+
+
+class InfantBirth(BaseUuidModel):
+
+    subject_identifier = models.CharField(
+        max_length=50,
+        unique=True)
+
+    dob = models.DateField()
