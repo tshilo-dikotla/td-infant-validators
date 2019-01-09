@@ -30,7 +30,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-AUTO_CREATE_KEYS = False
+# AUTO_CREATE_KEYS = True
 # Application definition
 
 ETC_DIR = '/etc'

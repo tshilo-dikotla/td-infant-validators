@@ -5,8 +5,7 @@ from edc_constants.constants import (
 from edc_form_validators import FormValidator
 
 from django.apps import apps as django_apps
-from tshilo_dikotla.constants import (
-    MODIFIED, NEVER_STARTED, START)
+from ..constants import MODIFIED, NEVER_STARTED, START
 
 
 class InfantArvProphFormValidator(FormValidator):
@@ -45,7 +44,6 @@ class InfantArvProphFormValidator(FormValidator):
 
     def validate_taking_arv_proph_unknown(self):
         cleaned_data = self.cleaned_data
-        print('*******************')
         infant_identifier = cleaned_data.get('infant_visit').subject_identifier
         if cleaned_data.get('prophylatic_nvp') == UNKNOWN and \
                 cleaned_data.get('arv_status') not in ['modified']:

@@ -4,7 +4,7 @@ from edc_constants.constants import YES, NO, UNKNOWN
 from ..form_validators import InfantArvProphFormValidator
 
 
-from tshilo_dikotla.constants import MODIFIED, START
+from ..constants import MODIFIED, START
 from .models import InfantVisit, Appointment, InfantBirthArv
 from django.core.exceptions import ValidationError
 import td_infant_validators
