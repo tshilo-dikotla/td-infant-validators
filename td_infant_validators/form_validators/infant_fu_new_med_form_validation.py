@@ -3,7 +3,7 @@ from edc_constants.constants import YES
 from edc_form_validators import FormValidator
 
 
-class InfantFuNewMedItemsForm(FormValidator):
+class InfantFuNewMedItemsFormValidator(FormValidator):
 
     def clean(self):
 
@@ -24,6 +24,7 @@ class InfantFuNewMedItemsForm(FormValidator):
             not_required_msg='Please select Other in Medication '
             'in when if Other medication is being record.'
         )
+        self.validate_stop_date()
 
     def validate_stop_date(self):
         cleaned_data = self.cleaned_data
@@ -32,22 +33,3 @@ class InfantFuNewMedItemsForm(FormValidator):
                 raise forms.ValidationError(
                     'You have indicated that medication stop date is before its start date. '
                     'Please correct.')
-
-#     def validate_new_medications(self):
-#         cleaned_data = self.cleaned_data
-#         if cleaned_data.get('infant_fu_med').new_medications == YES:
-#             if not cleaned_data.get('medication'):
-#                 raise forms.ValidationError(
-#                     'You have indicated that participant took medications. Please provide them.')
-#         if cleaned_data.get('infant_fu_med').new_medications == NO:
-#             raise forms.ValidationError('You indicated that no medications were taken. You cannot provide the '
-#                                         'medication. Please correct')
-
-
-#     def validate_other(self):
-#         cleaned_data = self.cleaned_data
-#         if cleaned_data.get('medication') == OTHER and not cleaned_data.get('other_medication'):
-#             raise forms.ValidationError('Please specify other medication.')
-#         if not cleaned_data.get('medication') == OTHER and cleaned_data.get('other_medication'):
-#             raise forms.ValidationError('Please select Other in Medication '
-#                                         'in when if Other medication is being record.')

@@ -92,6 +92,3 @@ class Foods (ListModelMixin, BaseUuidModel):
     class Meta:
         app_label = 'td_infant_validators'
         verbose_name = "Foods"
-
-
-verbose_name_plural = "Foods"
