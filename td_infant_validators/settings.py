@@ -30,21 +30,24 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+AUTO_CREATE_KEYS = False
 # Application definition
+
+ETC_DIR = '/etc'
 
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    'django.contrib.sites',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites',
     'django_crypto_fields.apps.AppConfig',
+    'edc_base.apps.AppConfig',
     'edc_device.apps.AppConfig',
     'edc_protocol.apps.AppConfig',
-    'td_infant_validators.apps.AppConfig'
+    'td_infant_validators.apps.AppConfig',
 ]
 
 MIDDLEWARE = [

@@ -1,4 +1,5 @@
 from .infant_birth_arv_form_validation import InfantArvFormValidator
+from .infant_arv_proph_form_validation import InfantArvProphFormValidator
 from .infant_birth_exam_form_validation import InfantBirthExamFormValidator
 from .infant_fu_dx_form_validation import InfantFuDxItemsFormValidator
 from .infant_fu_physical_form_validation import InfantFuPhysicalFormValidator
