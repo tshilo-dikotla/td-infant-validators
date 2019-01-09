@@ -1,4 +1,3 @@
-from django.core.exceptions import ValidationError
 from edc_constants.constants import YES
 from edc_form_validators import FormValidator
 
