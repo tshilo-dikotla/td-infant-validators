@@ -75,6 +75,13 @@ class MaternalConsent(UpdatesOrCreatesRegistrationModelMixin, BaseUuidModel):
         editable=False)
 
 
+class MaternalLabourDel(BaseUuidModel):
+
+    subject_identifier = models.CharField(max_length=25)
+
+    delivery_datetime = models.DateTimeField()
+
+
 class InfantFuImmunizations(models.Model):
 
     infant_visit = models.OneToOneField(InfantVisit, on_delete=PROTECT)
