@@ -61,7 +61,8 @@ class TestInfantFuPhysicalFormValidator(TestCase):
         MaternalConsent.objects.create(
             subject_identifier=relative_identifier,
             consent_datetime=get_utcnow() - relativedelta(days=10),
-            dob=(get_utcnow() - relativedelta(years=23)).date())
+            dob=(get_utcnow() - relativedelta(years=23)).date(),
+            version='1')
         maternal_consent_model = 'td_infant_validators.maternalconsent'
         InfantFuPhysicalFormValidator.maternal_consent_model =\
             maternal_consent_model

@@ -64,9 +64,15 @@ class MaternalConsent(UpdatesOrCreatesRegistrationModelMixin, BaseUuidModel):
 
     subject_identifier = models.CharField(max_length=25)
 
+    screening_identifier = models.CharField(max_length=50)
+
     consent_datetime = models.DateTimeField()
 
     dob = models.DateField()
+
+    version = models.CharField(
+        max_length=10,
+        editable=False)
 
 
 class InfantFuImmunizations(models.Model):
@@ -85,6 +91,33 @@ class InfantBirth(BaseUuidModel):
         unique=True)
 
     dob = models.DateField()
+
+
+class SubjectScreening(BaseUuidModel):
+
+    subject_identifier = models.CharField(
+        max_length=50)
+
+    screening_identifier = models.CharField(
+        max_length=36,
+        unique=True,
+        editable=False)
+
+    has_omang = models.CharField(max_length=3)
+
+    age_in_years = age_in_years = models.IntegerField()
+
+
+class TdConsentVersion(BaseUuidModel):
+
+    subjectscreening = models.ForeignKey(
+        SubjectScreening, null=True, on_delete=PROTECT)
+
+    version = models.CharField(max_length=3)
+
+    report_datetime = models.DateField(
+        null=True,
+        blank=True)
 
 
 class Foods (ListModelMixin, BaseUuidModel):
