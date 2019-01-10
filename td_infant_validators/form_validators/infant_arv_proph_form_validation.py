@@ -63,21 +63,3 @@ class InfantArvProphFormValidator(FormValidator):
                 {'prophylatic_nvp': 'Infant is HEU, answer cannot be No.'})
             raise ValidationError(
                 {'prophylatic_nvp': 'Infant is HEU, answer cannot be No.'})
-
-    def validate_taking_arv_proph_yes(self):
-        cleaned_data = self.cleaned_data
-        arv_proph_mod = self.data.get(
-            'infantarvprophmod_set-0-arv_code')
-        if cleaned_data.get('prophylatic_nvp') == YES:
-            if cleaned_data.get('arv_status') in [START, MODIFIED] and not arv_proph_mod:
-                self._errors.update(
-                    {'arv_status': 'Please complete the infant arv proph mods table.'})
-                raise ValidationError(
-                    {'arv_status': 'Please complete the infant arv proph mods table.'})
-            if cleaned_data.get('arv_status') == NEVER_STARTED and arv_proph_mod:
-                self._errors.update(
-                    {'arv_status': 'Infant never started prophlaxis, do not complete '
-                     'the infant arv proph mods table.'})
-                raise ValidationError(
-                    {'arv_status': 'Infant never started prophlaxis, do not complete '
-                     'the infant arv proph mods table.'})

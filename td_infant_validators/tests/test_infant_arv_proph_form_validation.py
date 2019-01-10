@@ -1,13 +1,11 @@
 from django.test import TestCase
 from django.utils import timezone
+from django.core.exceptions import ValidationError
 from edc_constants.constants import YES, NO, UNKNOWN
-from ..form_validators import InfantArvProphFormValidator
-
 
 from ..constants import MODIFIED, START
+from ..form_validators import InfantArvProphFormValidator
 from .models import InfantVisit, Appointment, InfantBirthArv
-from django.core.exceptions import ValidationError
-import td_infant_validators
 
 
 class TestInfantArvProphForm(TestCase):
