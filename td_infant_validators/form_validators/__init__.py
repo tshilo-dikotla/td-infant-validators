@@ -10,3 +10,4 @@ from .infant_fu_physical_form_validation import InfantFuPhysicalFormValidator
 from .infant_visit_form_validation import InfantVisitFormValidator
 from .solid_food_assessment_form_validation import SolidFoodAssessementFormValidator
 from .infant_fu_new_med_form_validation import InfantFuNewMedItemsFormValidator
+from .infant_fu_form_validation import InfantFuFormValidator
