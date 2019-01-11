@@ -10,13 +10,13 @@ class InfantFeedingFormValidator(FormValidator):
     infantvisit = 'td_infant.infantvisit'
 
     def clean(self):
-        #         self.validate_formula_intro_occur_previous()
-        #         self.validate_formula_intro_date_not_future()
+        self.validate_formula_intro_occur_previous()
+        self.validate_formula_intro_date_not_future()
         self.validate_cows_milk()
         self.validate_took_other_milk()
         self.validate_breast_milk_weaning()
         self.validate_breast_milk_completely_weaned()
-        #         self.validate_most_recent_bm_range()
+        self.validate_most_recent_bm_range()
 
         self.required_if(
             YES,
@@ -164,7 +164,7 @@ class InfantFeedingFormValidator(FormValidator):
     def validate_formula_intro_occur_previous(self):
         cleaned_data = self.cleaned_data
         infant_feeding = self.infant_feeding_cls.objects.filter(infant_visit__subject_identifier=cleaned_data.get(
-            'infant_visit').appointment.registered_subject.subject_identifier,
+            'infant_visit').subject_identifier,
             formula_intro_date__isnull=False,
             report_datetime__lt=cleaned_data.get('report_datetime')).exclude(infant_visit=cleaned_data.get(
                 'infant_visit')).last()

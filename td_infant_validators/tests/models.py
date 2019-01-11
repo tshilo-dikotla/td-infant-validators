@@ -144,6 +144,10 @@ class InfantFeeding(BaseUuidModel):
         blank=True,
         null=True)
 
+    report_datetime = models.DateField(
+        null=True,
+        blank=True)
+
 
 class SubjectScreening(BaseUuidModel):
 

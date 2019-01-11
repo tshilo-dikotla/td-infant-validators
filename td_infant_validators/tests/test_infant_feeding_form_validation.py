@@ -26,7 +26,8 @@ class TestInfantFeedingFormValidator(TestCase):
             report_datetime=timezone.now() - timezone.timedelta(days=5))
 
         self.infantfeeding = InfantFeeding.objects.create(
-            infant_visit=self.infantvisit
+            infant_visit=self.infantvisit,
+            formula_intro_date=timezone.now()
         )
 
         self.options = {
@@ -56,7 +57,8 @@ class TestInfantFeedingFormValidator(TestCase):
             'weaned_completely': NO,
             'most_recent_bm': None,
             'times_breastfed': '<1 per week',
-            'comments': ''}
+            'comments': '',
+            'report_datetime': timezone.now()}
 
     def test_child_received_other_feeding_date_no_date(self):
         """Test that if the child received other feeding, the date the food '
