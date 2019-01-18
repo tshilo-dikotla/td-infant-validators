@@ -1,7 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.test import TestCase, tag
 from django.utils import timezone
-from datetime import datetime, date
+from datetime import date
 from edc_constants.constants import YES, NO, NOT_APPLICABLE
 
 
@@ -9,7 +9,6 @@ from ..form_validators import InfantFeedingFormValidator
 from .models import InfantVisit, Appointment, InfantFeeding
 
 
-@tag('1')
 class TestInfantFeedingFormValidator(TestCase):
 
     def setUp(self):
@@ -48,7 +47,7 @@ class TestInfantFeedingFormValidator(TestCase):
             'milk_boiled': NOT_APPLICABLE,
             'fruits_veg': NO,
             'cereal_porridge': NO,
-            'solid_liquid': YES,
+            'solid_liquid': NO,
             'rehydration_salts': NO,
             'water_used': 'Water direct from source',
             'water_used_other': None,
@@ -112,6 +111,46 @@ class TestInfantFeedingFormValidator(TestCase):
         forms = InfantFeedingFormValidator(cleaned_data=self.options)
         forms.infantfeeding = 'td_infant_validators.infantfeeding'
         forms.infant_visit = 'td_infant_validators.infantfeeding'
+        self.assertRaises(ValidationError, forms.validate)
+
+    def test_validate_solids(self):
+        """Test if the formula_intro_occur is invalid"""
+        self.options['solid_liquid'] = NO
+        self.options['cereal_porridge'] = NO
+        self.options['fruits_veg'] = NO
+        forms = InfantFeedingFormValidator(cleaned_data=self.options)
+        forms.infantfeeding = 'td_infant_validators.infantfeeding'
+        forms.infant_visit = 'td_infant_validators.infantvisit'
+        self.assertRaises(ValidationError, forms.validate)
+
+    def test_validate_solids_one(self):
+        """Test if the formula_intro_occur is valid"""
+        self.options['solid_liquid'] = YES
+        self.options['cereal_porridge'] = NO
+        self.options['fruits_veg'] = NO
+        forms = InfantFeedingFormValidator(cleaned_data=self.options)
+        forms.infantfeeding = 'td_infant_validators.infantfeeding'
+        forms.infant_visit = 'td_infant_validators.infantvisit'
+        self.assertRaises(ValidationError, forms.validate)
+
+    def test_validate_solids_two(self):
+        """Test if the formula_intro_occur is invalid"""
+        self.options['solid_liquid'] = None
+        self.options['cereal_porridge'] = None
+        self.options['fruits_veg'] = None
+        forms = InfantFeedingFormValidator(cleaned_data=self.options)
+        forms.infantfeeding = 'td_infant_validators.infantfeeding'
+        forms.infant_visit = 'td_infant_validators.infantvisit'
+        self.assertRaises(ValidationError, forms.validate)
+
+    def test_validate_solids_all(self):
+        """Test if the formula_intro_occur is valid """
+        self.options['solid_liquid'] = YES
+        self.options['cereal_porridge'] = YES
+        self.options['fruits_veg'] = YES
+        forms = InfantFeedingFormValidator(cleaned_data=self.options)
+        forms.infantfeeding = 'td_infant_validators.infantfeeding'
+        forms.infant_visit = 'td_infant_validators.infantvisit'
         self.assertRaises(ValidationError, forms.validate)
 
     def test_is_first_formula_yes_no_date(self):

@@ -148,6 +148,31 @@ class InfantFeeding(BaseUuidModel):
         null=True,
         blank=True)
 
+    most_recent_bm = models.DateField(
+        verbose_name="Date of most recent breastfeeding ",
+        blank=True,
+        null=True)
+
+    def previous_infant_instance(self, infant_visit):
+        """Returns previous infant visit"""
+
+        visit = ['2000', '2010', '2030', '2060', '2090', '2120']
+
+        try:
+            registered_subject = infant_visit.subject_identifier
+            previous_visit_code = visit[visit.index(
+                self.infant_visit.visit_code) - 1]
+            previous_appointment = Appointment.objects.get(
+                subject_identifier=registered_subject,
+                visit_code=previous_visit_code)
+            return InfantVisit.objects.get(appointment=previous_appointment)
+        except Appointment.DoesNotExist:
+            return None
+        except InfantVisit.DoesNotExist:
+            return None
+        except AttributeError:
+            return None
+
 
 class SubjectScreening(BaseUuidModel):
 

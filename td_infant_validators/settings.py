@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'edc_base.apps.AppConfig',
     'edc_device.apps.AppConfig',
     'edc_protocol.apps.AppConfig',
-    'td_infant_validators.apps.AppConfig',
+    'td_infant_validators.apps.AppConfig'
 ]
 
 MIDDLEWARE = [

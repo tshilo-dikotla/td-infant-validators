@@ -10,6 +10,7 @@ class InfantFeedingFormValidator(FormValidator):
     infantvisit = 'td_infant.infantvisit'
 
     def clean(self):
+        self.validate_solids()
         self.validate_formula_intro_occur_previous()
         self.validate_formula_intro_date_not_future()
         self.validate_cows_milk()
@@ -64,6 +65,30 @@ class InfantFeedingFormValidator(FormValidator):
             field_required='formula_intro_date',
             required_msg='Question3: If received formula milk | foods | liquids since last'
             ' attended visit. Please provide intro date')
+
+    def validate_solids(self):
+
+        cleaned_data = self.cleaned_data
+        if cleaned_data.get('formula_intro_occur') == YES:
+            answer = False
+            for question in ['fruits_veg', 'cereal_porridge', 'solid_liquid']:
+                if cleaned_data.get(question) == YES:
+                    answer = True
+                    break
+            if not answer:
+                raise forms.ValidationError(
+                    'You should answer YES on either one of the questions '
+                    'about the fruits_veg, cereal_porridge or solid_liquid')
+        else:
+            answer = False
+            for question in ['fruits_veg', 'cereal_porridge', 'solid_liquid']:
+                if cleaned_data.get(question) == YES:
+                    answer = True
+                    break
+            if answer:
+                raise forms.ValidationError(
+                    'You should answer NO on all of the questions '
+                    'about the fruits_veg, cereal_porridge or solid_liquid')
 
     def validate_cows_milk(self):
         cleaned_data = self.cleaned_data
@@ -125,12 +150,12 @@ class InfantFeedingFormValidator(FormValidator):
     def validate_most_recent_bm_range(self):
         cleaned_data = self.cleaned_data
         prev_infant_feeding = self.infant_feeding_cls.objects.filter(infant_visit__subject_identifier=cleaned_data.get(
-            'infant_visit').appointment.registered_subject.subject_identifier,
+            'infant_visit').appointment.subject_identifier,
             most_recent_bm__isnull=False,
             report_datetime__lt=cleaned_data.get('report_datetime')).exclude(infant_visit=cleaned_data.get(
                 'infant_visit')).last()
 
-        if(self.instance.previous_infant_instance and
+        if(self.infant_feeding_cls.previous_infant_instance and
            (cleaned_data.get('ever_breastfeed') == YES and
                 cleaned_data.get('weaned_completely') == YES)):
 
