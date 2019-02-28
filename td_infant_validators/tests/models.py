@@ -1,11 +1,10 @@
 from django.db import models
 from django.db.models.deletion import PROTECT
 from edc_base.model_mixins import BaseUuidModel, ListModelMixin
+from edc_base.utils import get_utcnow
 from edc_constants.choices import (YES_NO_UNKNOWN_NA, YES_NO,
                                    YES_NO_NA, YES_NO_UNSURE_NA)
 from edc_constants.constants import NOT_APPLICABLE
-
-from edc_base.utils import get_utcnow
 from edc_registration.model_mixins import UpdatesOrCreatesRegistrationModelMixin
 
 
@@ -191,8 +190,10 @@ class SubjectScreening(BaseUuidModel):
 
 class TdConsentVersion(BaseUuidModel):
 
-    subjectscreening = models.ForeignKey(
-        SubjectScreening, null=True, on_delete=PROTECT)
+    screening_identifier = models.CharField(
+        max_length=36,
+        unique=True,
+        editable=False)
 
     version = models.CharField(max_length=3)
 
