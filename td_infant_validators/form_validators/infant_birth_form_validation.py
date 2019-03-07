@@ -27,11 +27,12 @@ class InfantBirthFormValidator(FormValidator):
                     'subject_identifier')).relative_identifier
             maternal_lab_del = self.maternal_lab_del_cls.objects.get(
                 subject_identifier=maternal_identifier)
-            if not cleaned_data.get('dob') == maternal_lab_del.delivery_datetime.date():
+            dob = cleaned_data.get('dob')
+            if not dob == maternal_lab_del.delivery_datetime.date():
                 msg = {'dob':
-                       'Infant dob must match maternal delivery date of {}. '
-                       'You wrote {}'.format(maternal_lab_del.delivery_datetime.date(),
-                                             cleaned_data.get('dob'))}
+                       'Infant dob must match maternal delivery date of'
+                       f' {maternal_lab_del.delivery_datetime.date()}. '
+                       f'You wrote {dob}'}
                 self._errors.update(msg)
                 raise ValidationError(msg)
 
