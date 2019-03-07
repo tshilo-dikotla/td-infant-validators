@@ -1,5 +1,5 @@
-from django.core.exceptions import ValidationError
 from django.apps import apps as django_apps
+from django.core.exceptions import ValidationError
 from edc_form_validators import FormValidator
 
 
@@ -15,7 +15,7 @@ class InfantVisitFormValidator(FormValidator):
         return django_apps.get_model(self.registered_subject_model)
 
     @property
-    def maternal_eligibility_cls(self):
+    def subject_screening_cls(self):
         return django_apps.get_model(self.subject_screening_model)
 
     @property
@@ -32,14 +32,14 @@ class InfantVisitFormValidator(FormValidator):
     def validate_current_consent_version(self):
         try:
             td_consent_version = self.consent_version_cls.objects.get(
-                subjectscreening=self.maternal_eligibility)
+                screening_identifier=self.subject_screening.screening_identifier)
         except self.consent_version_cls.DoesNotExist:
             raise ValidationError(
                 'Complete mother\'s consent version form before proceeding')
         else:
             try:
                 self.maternal_consent_cls.objects.get(
-                    screening_identifier=self.maternal_eligibility.screening_identifier,
+                    screening_identifier=self.subject_screening.screening_identifier,
                     version=td_consent_version.version)
             except self.maternal_consent_cls.DoesNotExist:
                 raise ValidationError(
@@ -47,14 +47,14 @@ class InfantVisitFormValidator(FormValidator):
                     'proceeding'.format(td_consent_version.version))
 
     @property
-    def maternal_eligibility(self):
+    def subject_screening(self):
         cleaned_data = self.cleaned_data
         try:
             relative_identifier = self.registered_subject_cls.objects.get(
-                subject_identifier=cleaned_data.get('subject_identifier')).relative_identifier
-            return self.maternal_eligibility_cls.objects.get(
+                subject_identifier=cleaned_data.get('appointment').subject_identifier).relative_identifier
+            return self.subject_screening_cls.objects.get(
                 subject_identifier=relative_identifier)
-        except self.maternal_eligibility_cls.DoesNotExist:
+        except self.subject_screening_cls.DoesNotExist:
             pass
         except self.registered_subject_cls.DoesNotExist:
             raise ValidationError('Registered Subject does not exist.')
