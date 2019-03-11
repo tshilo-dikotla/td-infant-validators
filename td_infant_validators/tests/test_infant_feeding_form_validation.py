@@ -1,9 +1,9 @@
-from django.core.exceptions import ValidationError
-from django.test import TestCase, tag
-from django.utils import timezone
 from datetime import date
-from edc_constants.constants import YES, NO, NOT_APPLICABLE
 
+from django.core.exceptions import ValidationError
+from django.test import TestCase
+from django.utils import timezone
+from edc_constants.constants import YES, NO, NOT_APPLICABLE
 
 from ..form_validators import InfantFeedingFormValidator
 from .models import InfantVisit, Appointment, InfantFeeding
@@ -257,7 +257,6 @@ class TestInfantFeedingFormValidator(TestCase):
         forms.infant_visit = 'td_infant_validators.infantfeeding'
         self.assertRaises(ValidationError, forms.validate)
 
-    @tag('2')
     def test_formula_intro_occur_yes_no_foods_indicated(self):
         self.options['juice'] = NO
         self.options['cow_milk'] = NO
