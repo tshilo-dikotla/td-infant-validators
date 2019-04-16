@@ -49,8 +49,8 @@ class InfantFuPhysicalFormValidator(InfantFormValidatorMixin, FormValidator):
     def validate_height_and_head_circum(self, cleaned_data=None):
         visit_codes = ['2000', '2010', '2020', '2060',
                        '2120', '2180', '2240', '2300', '2360']
-        if (not cleaned_data.get('infant_visit').appointment.visit_code == '2000' and
-                not cleaned_data.get('infant_visit').appointment.visit_code == '2010'):
+        if (not cleaned_data.get('infant_visit').appointment.visit_code == '2000'
+                and not cleaned_data.get('infant_visit').appointment.visit_code == '2010'):
             prev_visit = visit_codes.index(cleaned_data.get(
                 'infant_visit').appointment.visit_code) - 1
             while prev_visit > 0:
