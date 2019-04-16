@@ -1,11 +1,8 @@
-from django.core.exceptions import ValidationError
 from django import forms
-from edc_constants.constants import (
-    NO, NOT_APPLICABLE, UNKNOWN, YES)
-from edc_form_validators import FormValidator
-
 from django.apps import apps as django_apps
-from ..constants import MODIFIED, NEVER_STARTED, START
+from django.core.exceptions import ValidationError
+from edc_constants.constants import NO, NOT_APPLICABLE, UNKNOWN
+from edc_form_validators import FormValidator
 
 
 class InfantArvProphFormValidator(FormValidator):
@@ -40,7 +37,6 @@ class InfantArvProphFormValidator(FormValidator):
     def clean(self):
         self.validate_taking_arv_proph_unknown()
         self.validate_taking_arv_proph_no()
-#         self.validate_taking_arv_proph_yes()
 
     def validate_taking_arv_proph_unknown(self):
         cleaned_data = self.cleaned_data

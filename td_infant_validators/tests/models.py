@@ -100,7 +100,10 @@ class InfantBirth(BaseUuidModel):
         max_length=50,
         unique=True)
 
-    dob = models.DateField()
+    dob = models.DateField(null=True,
+                           blank=True)
+
+    report_datetime = models.DateTimeField(default=get_utcnow)
 
 
 class InfantFeeding(BaseUuidModel):

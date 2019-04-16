@@ -18,9 +18,11 @@ class InfantBirthFormValidator(FormValidator):
         return django_apps.get_model(self.maternal_lab_del_model)
 
     def clean(self):
-        self.validate_dob(cleaned_data=self.cleaned_data)
+        self.validate_dob()
+        self.validate_report_datetime()
 
-    def validate_dob(self, cleaned_data=None):
+    def validate_dob(self):
+        cleaned_data = self.cleaned_data
         try:
             maternal_identifier = self.registered_subject_cls.objects.get(
                 subject_identifier=cleaned_data.get(
@@ -41,3 +43,11 @@ class InfantBirthFormValidator(FormValidator):
         except self.maternal_lab_del_cls.DoesNotExist:
             raise ValidationError('Cannot find maternal labour and delivery '
                                   'form for this infant! This is not expected.')
+
+    def validate_report_datetime(self):
+        cleaned_data = self.cleaned_data
+        if cleaned_data.get('report_datetime').date() < cleaned_data.get('dob'):
+            msg = {'report_datetime': 'Infant enrollment date cannot be '
+                   'before infant date of birth.'}
+            self._errors.update(msg)
+            raise ValidationError(msg)

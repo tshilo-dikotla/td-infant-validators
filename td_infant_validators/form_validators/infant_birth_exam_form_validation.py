@@ -1,10 +1,12 @@
 from django.apps import apps as django_apps
 from django.core.exceptions import ValidationError
-from edc_form_validators import FormValidator
 from edc_constants.constants import ABNORMAL, NOT_EVALUATED, NO
+from edc_form_validators import FormValidator
+
+from .form_validator_mixin import InfantFormValidatorMixin
 
 
-class InfantBirthExamFormValidator(FormValidator):
+class InfantBirthExamFormValidator(InfantFormValidatorMixin, FormValidator):
 
     registered_subject_model = 'edc_registration.registeredsubject'
 

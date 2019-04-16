@@ -1,11 +1,11 @@
-from django.test import TestCase
 from dateutil.relativedelta import relativedelta
-from edc_constants.constants import YES, NO, NOT_APPLICABLE, POS
 from django.core.exceptions import ValidationError
+from django.test import TestCase
 from django.utils import timezone
+from edc_constants.constants import YES, NO, NOT_APPLICABLE, POS
 
-from .models import InfantVisit, Appointment
 from ..form_validators import InfantFuFormValidator
+from .models import InfantVisit, Appointment
 
 
 class TestInfantFuFormValidator(TestCase):
@@ -41,6 +41,10 @@ class TestInfantFuFormValidator(TestCase):
     def test_validate_hospitalization_duration(self):
         self.options['infant_birth'] = self.infant_visit.id
         self.options['was_hospitalized'] = YES
-        self.options['days_hospitalized'] = 100
-        infant_fu = InfantFuFormValidator(cleaned_data=self.options)
-        self.assertRaises(ValidationError, infant_fu.validate)
+        self.options['days_hospitalized'] = 80
+        form_validator = InfantFuFormValidator(
+            cleaned_data=self.options)
+        try:
+            form_validator.validate()
+        except ValidationError as e:
+            self.fail(f'ValidationError unexpectedly raised. Got{e}')
