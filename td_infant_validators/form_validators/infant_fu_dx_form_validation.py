@@ -2,16 +2,21 @@ from django.core.exceptions import ValidationError
 from edc_constants.constants import YES, NO
 from edc_form_validators import FormValidator
 
-
-class InfantFuDxFormValidator(FormValidator):
-
-    def clean(self):
-        pass
+from .form_validator_mixin import InfantFormValidatorMixin
 
 
-class InfantFuDxItemsFormValidator(FormValidator):
+class InfantFuDxFormValidator(InfantFormValidatorMixin, FormValidator):
 
     def clean(self):
+        self.validate_against_visit_datetime(
+            self.cleaned_data.get('report_datetime'))
+
+
+class InfantFuDxItemsFormValidator(InfantFormValidatorMixin, FormValidator):
+
+    def clean(self):
+        self.validate_against_visit_datetime(
+            self.cleaned_data.get('report_datetime'))
         self.validate_health_facility(cleaned_data=self.cleaned_data)
 
         responses = ('Other serious (grade 3 or 4)infection(not listed above),specify',

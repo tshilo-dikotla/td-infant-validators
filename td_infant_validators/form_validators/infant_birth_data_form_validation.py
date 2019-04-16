@@ -7,11 +7,8 @@ from .form_validator_mixin import InfantFormValidatorMixin
 class InfantBirthDataFormValidator(InfantFormValidatorMixin, FormValidator):
 
     def clean(self):
-        cleaned_data = self.cleaned_data
-        infant_identifier = cleaned_data.get('infant_visit').subject_identifier
-        self.validate_against_birth_date(infant_identifier=infant_identifier,
-                                         report_datetime=cleaned_data.get(
-                                             'report_datetime'))
+        self.validate_against_visit_datetime(
+            self.cleaned_data.get('report_datetime'))
         self.validate_apgar_score()
 
     def validate_apgar_score(self):

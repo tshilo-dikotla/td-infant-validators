@@ -1,5 +1,3 @@
-from django.apps import apps as django_apps
-from django.core.exceptions import ValidationError
 from edc_constants.constants import ABNORMAL, NOT_EVALUATED, NO
 from edc_form_validators import FormValidator
 
@@ -8,20 +6,9 @@ from .form_validator_mixin import InfantFormValidatorMixin
 
 class InfantBirthExamFormValidator(InfantFormValidatorMixin, FormValidator):
 
-    registered_subject_model = 'edc_registration.registeredsubject'
-
-    maternal_consent_model = 'td_maternal.subjectconsent'
-
-    @property
-    def registered_subject_cls(self):
-        return django_apps.get_model(self.registered_subject_model)
-
-    @property
-    def maternal_consent_cls(self):
-        return django_apps.get_model(self.maternal_consent_model)
-
     def clean(self):
-        self.validate_report_datetime(cleaned_data=self.cleaned_data)
+        self.validate_against_visit_datetime(
+            self.cleaned_data.get('report_datetime'))
         self.validate_general_activity()
         self.validate_heent_exam()
         self.validate_resp_exam()
@@ -29,29 +16,6 @@ class InfantBirthExamFormValidator(InfantFormValidatorMixin, FormValidator):
         self.validate_abdominal_exam()
         self.validate_skin_exam()
         self.validate_neuro_exam()
-
-    def relative_identifier(self, infant_identifier):
-        return self.registered_subject_cls.objects.get(
-            subject_identifier=infant_identifier).relative_identifier
-
-    def validate_report_datetime(self, cleaned_data=None):
-        relative_identifier = self.relative_identifier(
-            cleaned_data.get('infant_visit').subject_identifier)
-        maternal_consent = self.maternal_consent_cls.objects.filter(
-            subject_identifier=relative_identifier).order_by('consent_datetime').last()
-        if maternal_consent:
-            if cleaned_data.get('report_datetime') < maternal_consent.consent_datetime:
-                msg = {'report_datetime':
-                       'report_datetime CANNOT be before consent datetime'}
-                self._errors.update(msg)
-                raise ValidationError(msg)
-            if cleaned_data.get('report_datetime').date() < maternal_consent.dob:
-                msg = {'report_datetime':
-                       'report_datetime CANNOT be before dob'}
-                self._errors.update(msg)
-                raise ValidationError(msg)
-        else:
-            raise ValidationError('Maternal Consent form does not exist.')
 
     def validate_general_activity(self):
         self.required_if(

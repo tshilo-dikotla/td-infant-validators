@@ -3,8 +3,10 @@ from django.core.exceptions import ValidationError
 from edc_constants.constants import NO, NOT_EVALUATED, ABNORMAL
 from edc_form_validators import FormValidator
 
+from .form_validator_mixin import InfantFormValidatorMixin
 
-class InfantFuPhysicalFormValidator(FormValidator):
+
+class InfantFuPhysicalFormValidator(InfantFormValidatorMixin, FormValidator):
 
     infant_fu_physical_model = 'td_infant.infantfuphysical'
 
@@ -31,6 +33,9 @@ class InfantFuPhysicalFormValidator(FormValidator):
         return django_apps.get_model(self.maternal_consent_model)
 
     def clean(self):
+        self.validate_against_visit_datetime(
+            self.cleaned_data.get('report_datetime'))
+
         self.validate_height_and_head_circum(cleaned_data=self.cleaned_data)
         self.validate_report_datetime(cleaned_data=self.cleaned_data)
         self.validate_general_activity()
