@@ -4,7 +4,7 @@ from edc_form_validators import FormValidator
 from .form_validator_mixin import InfantFormValidatorMixin
 
 
-class InfantArvFormValidator(InfantFormValidatorMixin, FormValidator):
+class InfantBirthArvFormValidator(InfantFormValidatorMixin, FormValidator):
 
     def clean(self):
         self.validate_against_visit_datetime(
