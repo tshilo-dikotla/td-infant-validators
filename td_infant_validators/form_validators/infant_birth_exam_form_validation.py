@@ -9,15 +9,7 @@ class InfantBirthExamFormValidator(InfantFormValidatorMixin, FormValidator):
     def clean(self):
         self.validate_against_visit_datetime(
             self.cleaned_data.get('report_datetime'))
-        self.validate_general_activity()
-        self.validate_heent_exam()
-        self.validate_resp_exam()
-        self.validate_cardiac_exam()
-        self.validate_abdominal_exam()
-        self.validate_skin_exam()
-        self.validate_neuro_exam()
 
-    def validate_general_activity(self):
         self.required_if(
             ABNORMAL,
             field='general_activity',
@@ -28,7 +20,6 @@ class InfantBirthExamFormValidator(InfantFormValidatorMixin, FormValidator):
                               'Please correct')
         )
 
-    def validate_heent_exam(self):
         responses = (NO, NOT_EVALUATED)
         self.required_if(
             *responses,
@@ -37,8 +28,6 @@ class InfantBirthExamFormValidator(InfantFormValidatorMixin, FormValidator):
             required_msg=('You indicated that HEENT exam was not normal. '
                           'Provide answer to Q7.'))
 
-    def validate_resp_exam(self):
-        responses = (NO, NOT_EVALUATED)
         self.required_if(
             *responses,
             field='resp_exam',
@@ -46,8 +35,6 @@ class InfantBirthExamFormValidator(InfantFormValidatorMixin, FormValidator):
             required_msg=('You indicated that Respiratory exam was not normal. '
                           'Provide answer to Q9.'))
 
-    def validate_cardiac_exam(self):
-        responses = (NO, NOT_EVALUATED)
         self.required_if(
             *responses,
             field='cardiac_exam',
@@ -55,8 +42,6 @@ class InfantBirthExamFormValidator(InfantFormValidatorMixin, FormValidator):
             required_msg=('You indicated that Cardiac exam was not normal. '
                           'Provide answer to Q11.'))
 
-    def validate_abdominal_exam(self):
-        responses = (NO, NOT_EVALUATED)
         self.required_if(
             *responses,
             field='abdominal_exam',
@@ -64,8 +49,6 @@ class InfantBirthExamFormValidator(InfantFormValidatorMixin, FormValidator):
             required_msg=('You indicated that Abdominal exam was not normal. '
                           'Provide answer to Q13.'))
 
-    def validate_skin_exam(self):
-        responses = (NO, NOT_EVALUATED)
         self.required_if(
             *responses,
             field='skin_exam',
@@ -73,8 +56,6 @@ class InfantBirthExamFormValidator(InfantFormValidatorMixin, FormValidator):
             required_msg=('You indicated that Skin exam was not normal. '
                           'Provide answer to Q15.'))
 
-    def validate_neuro_exam(self):
-        responses = (NO, NOT_EVALUATED)
         self.required_if(
             *responses,
             field='neurologic_exam',

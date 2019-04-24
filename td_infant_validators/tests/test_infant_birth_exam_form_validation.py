@@ -1,10 +1,11 @@
+from dateutil.relativedelta import relativedelta
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from edc_base.utils import get_utcnow
-from .models import RegisteredSubject, MaternalConsent, Appointment, InfantVisit
+from edc_constants.constants import ABNORMAL, NORMAL, YES, NO
+
 from ..form_validators import InfantBirthExamFormValidator
-from dateutil.relativedelta import relativedelta
-from edc_constants.constants import ABNORMAL, NORMAL, YES, NO, NOT_APPLICABLE, NOT_EVALUATED
+from .models import RegisteredSubject, MaternalConsent, Appointment, InfantVisit
 
 
 class TestInfantBirthExamFormValidator(TestCase):
@@ -18,7 +19,8 @@ class TestInfantBirthExamFormValidator(TestCase):
             visit_code='2000')
         self.infant_visit = InfantVisit.objects.create(
             subject_identifier=appointment.subject_identifier,
-            appointment=appointment)
+            appointment=appointment,
+            report_datetime=get_utcnow())
         RegisteredSubject.objects.create(
             subject_identifier=subject_identifier,
             relative_identifier=relative_identifier)
@@ -33,46 +35,15 @@ class TestInfantBirthExamFormValidator(TestCase):
         InfantBirthExamFormValidator.maternal_consent_model =\
             maternal_consent_model
 
-    def test_report_datetime_before_consent_datetime_invalid(self):
+    def test_report_datetime_before_visit_datetime_invalid(self):
         cleaned_data = {
             'infant_visit': self.infant_visit,
             'report_datetime': get_utcnow() - relativedelta(days=11)}
         form_validator = InfantBirthExamFormValidator(
             cleaned_data=cleaned_data)
         self.assertRaises(ValidationError, form_validator.validate)
-        self.assertIn('report_datetime', form_validator._errors)
 
-    def test_report_datetime_after_consent_datetime_valid(self):
-        cleaned_data = {
-            'infant_visit': self.infant_visit,
-            'report_datetime': get_utcnow()
-        }
-        form_validator = InfantBirthExamFormValidator(
-            cleaned_data=cleaned_data)
-        try:
-            form_validator.validate()
-        except ValidationError as e:
-            self.fail(f'ValidationError unexpectedly raised. Got{e}')
-
-    def test_maternal_consent_object_does_not_exist(self):
-        self.maternal_consent.delete()
-        cleaned_data = dict(
-            infant_visit=self.infant_visit,
-            report_datetime=get_utcnow())
-        form_validator = InfantBirthExamFormValidator(
-            cleaned_data=cleaned_data)
-        self.assertRaises(ValidationError, form_validator.validate)
-
-    def test_report_datetime_before_consent_dob_invalid(self):
-        cleaned_data = {
-            'infant_visit': self.infant_visit,
-            'report_datetime': get_utcnow() - relativedelta(years=24)}
-        form_validator = InfantBirthExamFormValidator(
-            cleaned_data=cleaned_data)
-        self.assertRaises(ValidationError, form_validator.validate)
-        self.assertIn('report_datetime', form_validator._errors)
-
-    def test_report_datetime_after_consent_dob_valid(self):
+    def test_report_datetime_after_visit_datetime_valid(self):
         cleaned_data = {
             'infant_visit': self.infant_visit,
             'report_datetime': get_utcnow()
@@ -101,7 +72,7 @@ class TestInfantBirthExamFormValidator(TestCase):
             'infant_visit': self.infant_visit,
             'report_datetime': get_utcnow(),
             'general_activity': ABNORMAL,
-            'abnormal_activity': 'Some creepy stuff'
+            'abnormal_activity': 'blah blah blah'
         }
         form_validator = InfantBirthExamFormValidator(
             cleaned_data=cleaned_data)
