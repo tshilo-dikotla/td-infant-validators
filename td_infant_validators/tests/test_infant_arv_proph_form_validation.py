@@ -1,6 +1,6 @@
+from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.utils import timezone
-from django.core.exceptions import ValidationError
 from edc_constants.constants import YES, NO, UNKNOWN
 
 from ..constants import MODIFIED, START
@@ -21,7 +21,7 @@ class TestInfantArvProphForm(TestCase):
             subject_identifier='12345323',
             appointment=appointment)
 
-        infantbirtharv = InfantBirthArv.objects.create(
+        InfantBirthArv.objects.create(
             azt_discharge_supply=YES,
             infant_visit=infant_visit)
 
