@@ -2,10 +2,15 @@ from django.core.exceptions import ValidationError
 from edc_constants.constants import YES
 from edc_form_validators import FormValidator
 
+from .form_validator_mixin import InfantFormValidatorMixin
 
-class InfantNvpDispensingFormValidator(FormValidator):
+
+class InfantNvpDispensingFormValidator(InfantFormValidatorMixin, FormValidator):
 
     def clean(self):
+        self.validate_against_visit_datetime(
+            self.cleaned_data.get('report_datetime'))
+
         self.required_if(
             YES,
             field='nvp_prophylaxis',

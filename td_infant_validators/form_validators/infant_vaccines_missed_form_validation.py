@@ -1,10 +1,15 @@
 from edc_constants.constants import YES
 from edc_form_validators import FormValidator
 
+from .form_validator_mixin import InfantFormValidatorMixin
 
-class VaccinesMissedFormValidator(FormValidator):
+
+class VaccinesMissedFormValidator(InfantFormValidatorMixin, FormValidator):
 
     def clean(self):
+        self.validate_against_visit_datetime(
+            self.cleaned_data.get('report_datetime'))
+
         self.validate_vaccine_missed(cleaned_data=self.cleaned_data)
         self.validate_missed_vaccine_fields(cleaned_data=self.cleaned_data)
 

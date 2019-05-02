@@ -3,8 +3,10 @@ from django.core.exceptions import ValidationError
 from edc_constants.constants import YES
 from edc_form_validators import FormValidator
 
+from .form_validator_mixin import InfantFormValidatorMixin
 
-class VaccinesReceivedFormValidator(FormValidator):
+
+class VaccinesReceivedFormValidator(InfantFormValidatorMixin, FormValidator):
 
     infant_birth_model = 'td_infant.infantbirth'
 
@@ -13,6 +15,9 @@ class VaccinesReceivedFormValidator(FormValidator):
         return django_apps.get_model(self.infant_birth_model)
 
     def clean(self):
+        self.validate_against_visit_datetime(
+            self.cleaned_data.get('report_datetime'))
+
         self.validate_vaccine_received(cleaned_data=self.cleaned_data)
         self.validate_date_not_before_birth(cleaned_data=self.cleaned_data)
         self.validate_received_vaccine_fields(cleaned_data=self.cleaned_data)
