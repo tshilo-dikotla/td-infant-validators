@@ -1,10 +1,11 @@
 from django.core.exceptions import ValidationError
-from django.test import TestCase
+from django.test import TestCase, tag
 from edc_base.utils import get_utcnow
 from edc_constants.constants import YES, NO
 from ..form_validators import InfantNvpDispensingFormValidator
 
 
+@tag('nvp')
 class TestInfantNvpDispensingFormValidator(TestCase):
 
     def test_nvp_prophylaxis_yes_azt_required(self):
@@ -282,6 +283,24 @@ class TestInfantNvpDispensingFormValidator(TestCase):
         cleaned_data = {
             'azt_prophylaxis': NO,
             'azt_dose_given': '4'}
+        form_validator = InfantNvpDispensingFormValidator(
+            cleaned_data=cleaned_data)
+        self.assertRaises(ValidationError, form_validator.validate)
+        self.assertIn('azt_dose_given', form_validator._errors)
+
+    def test_azt_prophylaxis_no_dose_given_invalid_2(self):
+        cleaned_data = {
+            'azt_prophylaxis': NO,
+            'azt_dose_given': 'k'}
+        form_validator = InfantNvpDispensingFormValidator(
+            cleaned_data=cleaned_data)
+        self.assertRaises(ValidationError, form_validator.validate)
+        self.assertIn('azt_dose_given', form_validator._errors)
+
+    def test_azt_prophylaxis_no_dose_given_invalid_3(self):
+        cleaned_data = {
+            'azt_prophylaxis': NO,
+            'azt_dose_given': '0'}
         form_validator = InfantNvpDispensingFormValidator(
             cleaned_data=cleaned_data)
         self.assertRaises(ValidationError, form_validator.validate)
