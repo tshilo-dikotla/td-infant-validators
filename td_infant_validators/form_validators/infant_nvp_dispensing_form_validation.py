@@ -1,5 +1,5 @@
 from django.core.exceptions import ValidationError
-from edc_constants.constants import YES
+from edc_constants.constants import YES, NO
 from edc_form_validators import FormValidator
 
 from .form_validator_mixin import InfantFormValidatorMixin
@@ -60,16 +60,27 @@ class InfantNvpDispensingFormValidator(InfantFormValidatorMixin, FormValidator):
             not_required_msg=('Infant did NOT receive AZT prophylaxis, please do'
                               'not give the dose.'))
 
-        if self.cleaned_data.get('azt_dose_given'):
-            try:
-                azt_dose_given = float(self.cleaned_data.get('azt_dose_given'))
-            except ValueError:
-                msg = {'azt_dose_given': 'Please enter a valid number.'}
-                self._errors.update(msg)
-                raise ValidationError(msg)
-            else:
-                if azt_dose_given <= 0:
-                    msg = {'azt_dose_given':
-                           'Dose cannot be 0 or less.'}
+        self.required_if(
+            NO,
+            field='correct_dose',
+            field_required='corrected_dose'
+        )
+
+        self.validate_char_float('azt_dose_given')
+        self.validate_char_float('dose_admin_infant')
+        self.validate_char_float('corrected_dose')
+
+        def validate_char_float(self, value):
+            if self.cleaned_data.get(value):
+                try:
+                    float_value = float(self.cleaned_data.get(value))
+                except ValueError:
+                    msg = {value: 'Please enter a valid number.'}
                     self._errors.update(msg)
                     raise ValidationError(msg)
+                else:
+                    if float_value <= 0:
+                        msg = {value:
+                               'Dose cannot be 0 or less.'}
+                        self._errors.update(msg)
+                        raise ValidationError(msg)
