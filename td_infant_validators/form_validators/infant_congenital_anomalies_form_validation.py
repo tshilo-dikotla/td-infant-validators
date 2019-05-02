@@ -6,8 +6,8 @@ from .form_validator_mixin import InfantFormValidatorMixin
 class InfantCongenitalAnomaliesFormValidator(InfantFormValidatorMixin, FormValidator):
 
     def clean(self):
-        self.validate_other_specify(
-            field='cns')
+        self.validate_against_visit_datetime(
+            self.cleaned_data.get('report_datetime'))
 
 
 class InfantFacialDefectFormValidator(InfantFormValidatorMixin, FormValidator):
@@ -101,5 +101,5 @@ class InfantTrisomiesFormValidator(InfantFormValidatorMixin, FormValidator):
 class InfantCnsFormValidator(InfantFormValidatorMixin, FormValidator):
 
     def clean(self):
-        self.validate_against_visit_datetime(
-            self.cleaned_data.get('report_datetime'))
+        self.validate_other_specify(
+            field='cns')
