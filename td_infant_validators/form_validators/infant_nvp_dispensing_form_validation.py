@@ -67,8 +67,6 @@ class InfantNvpDispensingFormValidator(InfantFormValidatorMixin, FormValidator):
         )
 
         self.validate_char_float('azt_dose_given')
-        self.validate_char_float('dose_admin_infant')
-        self.validate_char_float('corrected_dose')
 
     def validate_char_float(self, value):
         if self.cleaned_data.get(value):
