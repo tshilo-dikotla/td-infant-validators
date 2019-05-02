@@ -70,17 +70,17 @@ class InfantNvpDispensingFormValidator(InfantFormValidatorMixin, FormValidator):
         self.validate_char_float('dose_admin_infant')
         self.validate_char_float('corrected_dose')
 
-        def validate_char_float(self, value):
-            if self.cleaned_data.get(value):
-                try:
-                    float_value = float(self.cleaned_data.get(value))
-                except ValueError:
-                    msg = {value: 'Please enter a valid number.'}
+    def validate_char_float(self, value):
+        if self.cleaned_data.get(value):
+            try:
+                float_value = float(self.cleaned_data.get(value))
+            except ValueError:
+                msg = {value: 'Please enter a valid number.'}
+                self._errors.update(msg)
+                raise ValidationError(msg)
+            else:
+                if float_value <= 0:
+                    msg = {value:
+                           'Dose cannot be 0 or less.'}
                     self._errors.update(msg)
                     raise ValidationError(msg)
-                else:
-                    if float_value <= 0:
-                        msg = {value:
-                               'Dose cannot be 0 or less.'}
-                        self._errors.update(msg)
-                        raise ValidationError(msg)
