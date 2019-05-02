@@ -5,6 +5,7 @@ from .infant_birth_exam_form_validation import InfantBirthExamFormValidator
 from .infant_birth_form_validation import InfantBirthFormValidator
 from .infant_congenital_anomalies_form_validation import *
 from .infant_feeding_form_validation import InfantFeedingFormValidator
+from .infant_fu_dx_form_validation import InfantFuDxFormValidator
 from .infant_fu_dx_form_validation import InfantFuDxItemsFormValidator
 from .infant_fu_form_validation import InfantFuFormValidator
 from .infant_fu_new_med_form_validation import InfantFuNewMedItemsFormValidator
