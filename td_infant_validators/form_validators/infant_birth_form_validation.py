@@ -46,7 +46,8 @@ class InfantBirthFormValidator(FormValidator):
 
     def validate_report_datetime(self):
         cleaned_data = self.cleaned_data
-        if cleaned_data.get('report_datetime').date() < cleaned_data.get('dob'):
+        if (cleaned_data.get('report_datetime') and
+                cleaned_data.get('report_datetime').date() < cleaned_data.get('dob')):
             msg = {'report_datetime': 'Infant enrollment date cannot be '
                    'before infant date of birth.'}
             self._errors.update(msg)
