@@ -20,7 +20,7 @@ class InfantBirthExamFormValidator(InfantFormValidatorMixin, FormValidator):
                               'Please correct')
         )
 
-        responses = (NO, NOT_EVALUATED)
+        responses = (NO, 'Not_evaluated')
         self.required_if(
             *responses,
             field='heent_exam',
