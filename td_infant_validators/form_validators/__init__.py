@@ -3,6 +3,7 @@ from .infant_birth_arv_form_validation import InfantBirthArvFormValidator
 from .infant_birth_data_form_validation import InfantBirthDataFormValidator
 from .infant_birth_exam_form_validation import InfantBirthExamFormValidator
 from .infant_birth_form_validation import InfantBirthFormValidator
+from .infant_birth_feeding_form_validation import InfantBirthFeedingFormValidator
 from .infant_congenital_anomalies_form_validation import *
 from .infant_feeding_form_validation import InfantFeedingFormValidator
 from .infant_fu_dx_form_validation import InfantFuDxFormValidator
