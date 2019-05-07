@@ -1,12 +1,18 @@
 from django.apps import apps as django_apps
 from django.core.exceptions import ValidationError
-from edc_constants.constants import NO, NOT_EVALUATED, ABNORMAL
+from edc_constants.constants import NO, ABNORMAL
 from edc_form_validators import FormValidator
 
 from .form_validator_mixin import InfantFormValidatorMixin
 
 
 class InfantFuPhysicalFormValidator(InfantFormValidatorMixin, FormValidator):
+
+    infant_fu_physical_model = 'td_infant.infantfuphysical'
+
+    @property
+    def infant_fu_physical_cls(self):
+        return django_apps.get_model(self.infant_fu_physical_model)
 
     def clean(self):
         self.validate_against_visit_datetime(
@@ -24,7 +30,7 @@ class InfantFuPhysicalFormValidator(InfantFormValidatorMixin, FormValidator):
                               'Please correct')
         )
 
-        responses = (NO, NOT_EVALUATED)
+        responses = (NO, 'Not_evaluated')
 
         self.required_if(
             *responses,
@@ -33,7 +39,7 @@ class InfantFuPhysicalFormValidator(InfantFormValidatorMixin, FormValidator):
             required_msg=('You indicated that HEENT exam was not normal. '
                           'Provide answer to Q7.'))
 
-        responses = (NO, NOT_EVALUATED)
+        responses = (NO, 'Not_evaluated')
         self.required_if(
             *responses,
             field='resp_exam',
@@ -41,7 +47,7 @@ class InfantFuPhysicalFormValidator(InfantFormValidatorMixin, FormValidator):
             required_msg=('You indicated that Respiratory exam was not normal. '
                           'Provide answer to Q9.'))
 
-        responses = (NO, NOT_EVALUATED)
+        responses = (NO, 'Not_evaluated')
         self.required_if(
             *responses,
             field='cardiac_exam',
