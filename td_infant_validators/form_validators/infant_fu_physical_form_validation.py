@@ -1,12 +1,18 @@
 from django.apps import apps as django_apps
 from django.core.exceptions import ValidationError
-from edc_constants.constants import NO, NOT_EVALUATED, ABNORMAL
+from edc_constants.constants import NO, ABNORMAL
 from edc_form_validators import FormValidator
 
 from .form_validator_mixin import InfantFormValidatorMixin
 
 
 class InfantFuPhysicalFormValidator(InfantFormValidatorMixin, FormValidator):
+
+    infant_fu_physical_model = 'td_infant.infantfuphysical'
+
+    @property
+    def infant_fu_physical_cls(self):
+        return django_apps.get_model(self.infant_fu_physical_model)
 
     def clean(self):
         self.validate_against_visit_datetime(
@@ -24,60 +30,62 @@ class InfantFuPhysicalFormValidator(InfantFormValidatorMixin, FormValidator):
                               'Please correct')
         )
 
-        responses = (NO, NOT_EVALUATED)
+        responses = (NO, 'Not_evaluated')
 
         self.required_if(
             *responses,
             field='heent_exam',
             field_required='heent_no_other',
-            required_msg=('You indicated that HEENT exam was not normal. '
-                          'Provide answer to Q7.'))
+            required_msg=('You indicated that HEENT exam was not normal'
+                          '/not evaluated. Provide answer to Q7.'))
 
-        responses = (NO, NOT_EVALUATED)
+        responses = (NO, 'Not_evaluated')
         self.required_if(
             *responses,
             field='resp_exam',
             field_required='resp_exam_other',
-            required_msg=('You indicated that Respiratory exam was not normal. '
-                          'Provide answer to Q9.'))
+            required_msg=('You indicated that Respiratory exam was not normal'
+                          '/not evaluated. Provide answer to Q9.'))
 
-        responses = (NO, NOT_EVALUATED)
+        responses = (NO, 'Not_evaluated')
         self.required_if(
             *responses,
             field='cardiac_exam',
             field_required='cardiac_exam_other',
-            required_msg=('You indicated that Cardiac exam was not normal. '
-                          'Provide answer to Q11.'))
+            required_msg=('You indicated that Cardiac exam was not normal'
+                          '/not evaluated. Provide answer to Q11.'))
 
         self.required_if(
             *responses,
             field='abdominal_exam',
             field_required='abdominal_exam_other',
-            required_msg=('You indicated that Abdominal exam was not normal. '
-                          'Provide answer to Q16.'))
+            required_msg=('You indicated that Abdominal exam was not normal'
+                          '/not evaluated. Provide answer to Q16.'))
 
         self.required_if(
             *responses,
             field='skin_exam',
             field_required='skin_exam_other',
-            required_msg=('You indicated that Skin exam was not normal. '
-                          'Provide answer to Q18.'))
+            required_msg=('You indicated that Skin exam was not normal'
+                          '/not evaluated. Provide answer to Q18.'))
 
         self.required_if(
             *responses,
             field='neurologic_exam',
             field_required='neuro_exam_other',
-            required_msg=('You indicated that Neurological exam was not normal. '
-                          'Provide answer to Q22.'))
+            required_msg=('You indicated that Neurological exam was not normal'
+                          '/not evaluated. Provide answer to Q22.'))
 
     def validate_height_and_head_circum(self, cleaned_data=None):
         visit_codes = ['2000', '2010', '2020', '2060',
                        '2120', '2180', '2240', '2300', '2360']
-        if (not cleaned_data.get('infant_visit').appointment.visit_code
+
+        if (cleaned_data.get('infant_visit').appointment.visit_code
                 not in ['2000', '2010']):
 
             prev_visit = visit_codes.index(cleaned_data.get(
                 'infant_visit').appointment.visit_code) - 1
+
             while prev_visit > 0:
                 try:
                     subject_identifier = cleaned_data.get(

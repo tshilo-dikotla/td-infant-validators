@@ -3,9 +3,10 @@ from django.core.exceptions import ValidationError
 from django.test import TestCase
 from edc_base.utils import get_utcnow
 from edc_constants.constants import YES, NO, ABNORMAL, NORMAL
+
+from ..form_validators import InfantFuPhysicalFormValidator
 from .models import (Appointment, InfantVisit, InfantBirth,
                      InfantFuPhysical, RegisteredSubject, MaternalConsent)
-from ..form_validators import InfantFuPhysicalFormValidator
 
 
 class TestInfantFuPhysicalFormValidator(TestCase):
@@ -124,7 +125,6 @@ class TestInfantFuPhysicalFormValidator(TestCase):
         form_validator = InfantFuPhysicalFormValidator(
             cleaned_data=cleaned_data)
         self.assertRaises(ValidationError, form_validator.validate)
-        self.assertIn('report_datetime', form_validator._errors)
 
     def test_report_datetime_after_consent_datetime_valid(self):
         cleaned_data = dict(
@@ -148,7 +148,6 @@ class TestInfantFuPhysicalFormValidator(TestCase):
         form_validator = InfantFuPhysicalFormValidator(
             cleaned_data=cleaned_data)
         self.assertRaises(ValidationError, form_validator.validate)
-        self.assertIn('report_datetime', form_validator._errors)
 
     def test_report_datetime_after_infant_dob_valid(self):
         cleaned_data = dict(
