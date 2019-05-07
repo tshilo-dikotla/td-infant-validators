@@ -22,12 +22,12 @@ class InfantBirthArvFormValidator(InfantFormValidatorMixin, FormValidator):
         )
 
         if (self.cleaned_data.get('azt_after_birth')
-            and (self.cleaned_data.get('azt_after_birth') == UNKNOWN
-                 and self.cleaned_data.get('azt_additional_dose') != UNKNOWN)):
-            msg = {'azt_additional_dose': 'If Q3 is \'unknown\', '
-                   'this field must be \'unknown.\''}
-            self._errors.update(msg)
-            raise ValidationError(msg)
+                and self.cleaned_data.get('azt_after_birth') == UNKNOWN):
+            if self.cleaned_data.get('azt_additional_dose') != UNKNOWN:
+                msg = {'azt_additional_dose': 'If Q3 is \'Unknown\', '
+                       'this field must be \'Unknown.\''}
+                self._errors.update(msg)
+                raise ValidationError(msg)
         else:
             self.applicable_if(
                 YES,
