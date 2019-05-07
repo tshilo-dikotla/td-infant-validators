@@ -36,45 +36,45 @@ class InfantFuPhysicalFormValidator(InfantFormValidatorMixin, FormValidator):
             *responses,
             field='heent_exam',
             field_required='heent_no_other',
-            required_msg=('You indicated that HEENT exam was not normal. '
-                          'Provide answer to Q7.'))
+            required_msg=('You indicated that HEENT exam was not normal'
+                          '/not evaluated. Provide answer to Q7.'))
 
         responses = (NO, 'Not_evaluated')
         self.required_if(
             *responses,
             field='resp_exam',
             field_required='resp_exam_other',
-            required_msg=('You indicated that Respiratory exam was not normal. '
-                          'Provide answer to Q9.'))
+            required_msg=('You indicated that Respiratory exam was not normal'
+                          '/not evaluated. Provide answer to Q9.'))
 
         responses = (NO, 'Not_evaluated')
         self.required_if(
             *responses,
             field='cardiac_exam',
             field_required='cardiac_exam_other',
-            required_msg=('You indicated that Cardiac exam was not normal. '
-                          'Provide answer to Q11.'))
+            required_msg=('You indicated that Cardiac exam was not normal'
+                          '/not evaluated. Provide answer to Q11.'))
 
         self.required_if(
             *responses,
             field='abdominal_exam',
             field_required='abdominal_exam_other',
-            required_msg=('You indicated that Abdominal exam was not normal. '
-                          'Provide answer to Q16.'))
+            required_msg=('You indicated that Abdominal exam was not normal'
+                          '/not evaluated. Provide answer to Q16.'))
 
         self.required_if(
             *responses,
             field='skin_exam',
             field_required='skin_exam_other',
-            required_msg=('You indicated that Skin exam was not normal. '
-                          'Provide answer to Q18.'))
+            required_msg=('You indicated that Skin exam was not normal'
+                          '/not evaluated. Provide answer to Q18.'))
 
         self.required_if(
             *responses,
             field='neurologic_exam',
             field_required='neuro_exam_other',
-            required_msg=('You indicated that Neurological exam was not normal. '
-                          'Provide answer to Q22.'))
+            required_msg=('You indicated that Neurological exam was not normal'
+                          '/not evaluated. Provide answer to Q22.'))
 
     def validate_height_and_head_circum(self, cleaned_data=None):
         visit_codes = ['2000', '2010', '2020', '2060',
