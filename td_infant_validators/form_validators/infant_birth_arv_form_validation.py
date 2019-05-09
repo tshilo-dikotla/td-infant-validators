@@ -1,4 +1,5 @@
-from edc_constants.constants import YES
+from django.core.exceptions import ValidationError
+from edc_constants.constants import YES, UNKNOWN
 from edc_form_validators import FormValidator
 
 from .form_validator_mixin import InfantFormValidatorMixin
@@ -19,11 +20,21 @@ class InfantBirthArvFormValidator(InfantFormValidatorMixin, FormValidator):
                 'Participant indicated that AZT was NOT provided. '
                 'You cannot provide date of first dose')
         )
-        self.applicable_if(
-            YES,
-            field='azt_after_birth',
-            field_applicable='azt_additional_dose'
-        )
+
+        if (self.cleaned_data.get('azt_after_birth')
+                and self.cleaned_data.get('azt_after_birth') == UNKNOWN):
+            if self.cleaned_data.get('azt_additional_dose') != UNKNOWN:
+                msg = {'azt_additional_dose': 'If Q3 is \'Unknown\', '
+                       'this field must be \'Unknown.\''}
+                self._errors.update(msg)
+                raise ValidationError(msg)
+        else:
+            self.applicable_if(
+                YES,
+                field='azt_after_birth',
+                field_applicable='azt_additional_dose'
+            )
+
         self.required_if(
             YES,
             field='sdnvp_after_birth',
