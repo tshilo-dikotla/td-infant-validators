@@ -37,7 +37,7 @@ class InfantFeedingFormValidator(InfantFormValidatorMixin, FormValidator):
         self.applicable_if(
             YES,
             field='other_milk',
-            field_required='milk_boiled'
+            field_applicable='milk_boiled'
         )
 
         self.applicable_if(
