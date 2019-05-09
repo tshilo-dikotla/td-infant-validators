@@ -128,12 +128,12 @@ class InfantFeedingFormValidator(InfantFormValidatorMixin, FormValidator):
                     'You should answer NO on all of the questions '
                     'about the fruits_veg, cereal_porridge or solid_liquid')
 
-    def validate_other_feeding(self, cleaned_data):
-        if cleaned_data.get('other_feeding') == YES:
+    def validate_other_feeding(self):
+        if self.cleaned_data.get('other_feeding') == YES:
             answer = False
             for question in ['water', 'juice', 'cow_milk',
                              'other_milk', 'solid_liquid']:
-                if cleaned_data.get(question) == YES:
+                if self.cleaned_data.get(question) == YES:
                     answer = True
                     break
             if not answer:
@@ -144,7 +144,7 @@ class InfantFeedingFormValidator(InfantFormValidatorMixin, FormValidator):
             answer = False
             for question in ['water', 'juice', 'cow_milk',
                              'other_milk', 'solid_liquid']:
-                if cleaned_data.get(question) == YES:
+                if self.cleaned_data.get(question) == YES:
                     answer = True
                     break
             if answer:
