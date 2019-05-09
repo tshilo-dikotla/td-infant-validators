@@ -1,7 +1,4 @@
-from django.apps import apps as django_apps
-from django import forms
-from django.core.exceptions import ValidationError
-from edc_constants.constants import NO, YES, OTHER
+from edc_constants.constants import YES, OTHER
 from edc_form_validators import FormValidator
 
 
