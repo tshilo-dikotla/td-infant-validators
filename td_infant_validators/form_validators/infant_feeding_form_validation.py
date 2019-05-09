@@ -194,12 +194,7 @@ class InfantFeedingFormValidator(InfantFormValidatorMixin, FormValidator):
         self.applicable_if(
             YES,
             field='other_milk',
-            field_required='milk_boiled',
-            required_msg=('The infant took milk from another animal, answer'
-                          ' cannot be N/A'),
-            not_required_msg=('The infant did not take milk from any other '
-                              'animal, the answer for whether the milk was '
-                              'boiled should be N/A'))
+            field_applicable='milk_boiled')
 
     def validate_breast_milk_completely_weaned(self):
         cleaned_data = self.cleaned_data
