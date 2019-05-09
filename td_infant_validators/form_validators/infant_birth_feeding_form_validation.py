@@ -6,7 +6,6 @@ from .form_validator_mixin import InfantFormValidatorMixin
 class InfantBirthFeedingFormValidator(InfantFormValidatorMixin, FormValidator):
 
     def clean(self):
-        print("feeding form validator class")
         self.validate_against_visit_datetime(
             self.cleaned_data.get('report_datetime'))
         infant_identifier = self.cleaned_data.get('infant_visit').subject_identifier

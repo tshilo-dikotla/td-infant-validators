@@ -18,16 +18,6 @@ class InfantFuNewMedItemsFormValidator(InfantFormValidatorMixin, FormValidator):
         self.validate_against_visit_datetime(
             self.cleaned_data.get('report_datetime'))
 
-        condition = self.cleaned_data.get(
-            'infant_fu_med').new_medications == YES
-        self.required_if_true(
-            condition,
-            field='infant_fu_med',
-            field_required='medication',
-            required_msg=(
-                'You have indicated that participant took medications.'
-                'Please provide them.'))
-
         self.validate_other_specify(
             other_specify_field='other_medication',
             field='medication',
