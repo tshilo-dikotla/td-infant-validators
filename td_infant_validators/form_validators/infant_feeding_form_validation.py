@@ -37,11 +37,11 @@ class InfantFeedingFormValidator(InfantFormValidatorMixin, FormValidator):
         self.applicable_if(
             YES,
             field='other_milk',
-            field_required='milk_boiled'
+            field_applicable='milk_boiled'
         )
 
         self.applicable_if(
-            YES,
+            NO,
             field='ever_breastfeed',
             field_applicable='complete_weaning')
 
@@ -53,7 +53,6 @@ class InfantFeedingFormValidator(InfantFormValidatorMixin, FormValidator):
         self.validate_most_recent_bm_range()
         self.validate_breast_milk_completely_weaned()
         self.validate_other_feeding()
-        self.validate_formula_intro_occur_previous()
 
     def validate_formula_intro_date_not_future(self):
         cleaned_data = self.cleaned_data
@@ -128,12 +127,12 @@ class InfantFeedingFormValidator(InfantFormValidatorMixin, FormValidator):
                     'You should answer NO on all of the questions '
                     'about the fruits_veg, cereal_porridge or solid_liquid')
 
-    def validate_other_feeding(self, cleaned_data):
-        if cleaned_data.get('other_feeding') == YES:
+    def validate_other_feeding(self):
+        if self.cleaned_data.get('other_feeding') == YES:
             answer = False
             for question in ['water', 'juice', 'cow_milk',
                              'other_milk', 'solid_liquid']:
-                if cleaned_data.get(question) == YES:
+                if self.cleaned_data.get(question) == YES:
                     answer = True
                     break
             if not answer:
@@ -144,7 +143,7 @@ class InfantFeedingFormValidator(InfantFormValidatorMixin, FormValidator):
             answer = False
             for question in ['water', 'juice', 'cow_milk',
                              'other_milk', 'solid_liquid']:
-                if cleaned_data.get(question) == YES:
+                if self.cleaned_data.get(question) == YES:
                     answer = True
                     break
             if answer:
@@ -194,12 +193,7 @@ class InfantFeedingFormValidator(InfantFormValidatorMixin, FormValidator):
         self.applicable_if(
             YES,
             field='other_milk',
-            field_required='milk_boiled',
-            required_msg=('The infant took milk from another animal, answer'
-                          ' cannot be N/A'),
-            not_required_msg=('The infant did not take milk from any other '
-                              'animal, the answer for whether the milk was '
-                              'boiled should be N/A'))
+            field_applicable='milk_boiled')
 
     def validate_breast_milk_completely_weaned(self):
         cleaned_data = self.cleaned_data
@@ -220,28 +214,20 @@ class InfantFeedingFormValidator(InfantFormValidatorMixin, FormValidator):
 
     def validate_most_recent_bm_range(self):
         cleaned_data = self.cleaned_data
-        prev_infant_feeding = self.infant_feeding_cls.objects.filter(
-            infant_visit__subject_identifier=cleaned_data.get(
-                'infant_visit').appointment.subject_identifier,
-            most_recent_bm__isnull=False,
-            report_datetime__lt=cleaned_data.get(
-                'report_datetime')).exclude(infant_visit=cleaned_data.get(
-                    'infant_visit')).last()
 
-        if(self.infant_feeding_cls.previous_infant_instance and
-           (cleaned_data.get('ever_breastfeed') == YES and
+        if (self.instance.previous_infant_feeding and
+            (cleaned_data.get('ever_breastfeed') == YES and
                 cleaned_data.get('weaned_completely') == YES)):
 
-            if prev_infant_feeding:
-                if(not cleaned_data.get('most_recent_bm')
-                   or (cleaned_data.get('most_recent_bm') > cleaned_data.get(
-                       "report_datetime").date() or cleaned_data.get(
-                           'most_recent_bm') < prev_infant_feeding.most_recent_bm)):
+            if(not cleaned_data.get('most_recent_bm')
+               or (cleaned_data.get('most_recent_bm') > cleaned_data.get(
+                   "report_datetime").date() or cleaned_data.get(
+                       'most_recent_bm') < self.instance.previous_infant_feeding.most_recent_bm)):
 
-                    raise forms.ValidationError(
-                        {'most_recent_bm': 'Date of most '
-                         'recent breastfeeding must be '
-                         'between last visit date and today.'})
+                raise forms.ValidationError(
+                    {'most_recent_bm': 'Date of most '
+                     'recent breastfeeding must be '
+                     'between last visit date and today.'})
 
     @property
     def infant_feeding_cls(self):
