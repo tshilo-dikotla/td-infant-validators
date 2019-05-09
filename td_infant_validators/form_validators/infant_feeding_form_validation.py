@@ -53,7 +53,6 @@ class InfantFeedingFormValidator(InfantFormValidatorMixin, FormValidator):
         self.validate_most_recent_bm_range()
         self.validate_breast_milk_completely_weaned()
         self.validate_other_feeding()
-        self.validate_formula_intro_occur_previous()
 
     def validate_formula_intro_date_not_future(self):
         cleaned_data = self.cleaned_data
