@@ -14,8 +14,8 @@ class InfantNvpAdjustmentFormValidator(FormValidator):
                 'If there was a dose adjustment, please give the adjusted dose.'
             ))
 
-        self.not_applicable_if(
-            YES,
+        self.required_if(
+            NO,
             field='dose_4_weeks',
-            field_applicable='incomplete_dose'
+            field_required='incomplete_dose'
         )
