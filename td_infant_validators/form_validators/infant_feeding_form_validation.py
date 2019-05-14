@@ -51,6 +51,11 @@ class InfantFeedingFormValidator(InfantFormValidatorMixin, FormValidator):
             field='ever_breastfeed',
             field_applicable='weaned_completely')
 
+        self.applicable_if(
+            YES,
+            field='took_formula',
+            field_applicable='water_used')
+
         self.validate_most_recent_bm_range()
         self.validate_breast_milk_completely_weaned()
         self.validate_other_feeding()
