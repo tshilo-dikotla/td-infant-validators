@@ -1,7 +1,7 @@
 from django.core.exceptions import ValidationError
 from edc_form_validators import FormValidator
-from edc_lab.constants import TUBE
 
+from ..constants import TUBE
 from .form_validator_mixin import InfantFormValidatorMixin
 
 
