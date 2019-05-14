@@ -134,25 +134,27 @@ class InfantFeedingFormValidator(InfantFormValidatorMixin, FormValidator):
         if self.cleaned_data.get('other_feeding') == YES:
             answer = False
             for question in ['water', 'juice', 'cow_milk',
-                             'other_milk', 'solid_liquid']:
+                             'other_milk', 'solid_liquid', 'rehydration_salts']:
                 if self.cleaned_data.get(question) == YES:
                     answer = True
                     break
             if not answer:
                 raise forms.ValidationError(
                     'You should answer YES on either one of the questions about'
-                    ' the water, juice, cow_milk, other milk, or solid_liquid')
+                    ' the water, juice, cow_milk, other milk, oral rehydration'
+                    ' salts or solid_liquid')
         else:
             answer = False
             for question in ['water', 'juice', 'cow_milk',
-                             'other_milk', 'solid_liquid']:
+                             'other_milk', 'solid_liquid', 'rehydration_salts']:
                 if self.cleaned_data.get(question) == YES:
                     answer = True
                     break
             if answer:
                 raise forms.ValidationError(
                     'You should answer NO on all the questions  about the water'
-                    ', juice, cow_milk, other milk, or solid_liquid')
+                    ', juice, cow_milk, other milk, oral rehydration'
+                    ' salts or solid_liquid')
 
     def validate_took_formula(self):
         self.required_if(
