@@ -105,14 +105,14 @@ class InfantFuPhysicalFormValidator(InfantFormValidatorMixin, FormValidator):
                                    f'{height}, yet in '
                                    f'visit {visit_codes[prev_visit]} you '
                                    'indicated that participant '
-                                   'height was {prev_fu_phy.height}. Please '
+                                   f'height was {prev_fu_phy.height}. Please '
                                    'correct.'}
                             self._errors.update(msg)
                             raise ValidationError(msg)
                     if prev_fu_phy.head_circumference:
                         head_circumference = cleaned_data.get(
                             'head_circumference')
-                        if (cleaned_data.get('head_circumference')
+                        if (head_circumference and head_circumference
                                 < prev_fu_phy.head_circumference):
                             msg = {'head_circumference':
                                    'You stated that the head circumference for'
