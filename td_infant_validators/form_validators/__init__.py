@@ -20,3 +20,4 @@ from .infant_vaccines_received_form_validation import VaccinesReceivedFormValida
 from .infant_visit_form_validation import InfantVisitFormValidator
 from .karabo_tb_history_form_validation import KaraboTBHistoryFormValidator
 from .solid_food_assessment_form_validation import SolidFoodAssessementFormValidator
+from .karabo_tb_history_form_validation import KaraboTBHistoryFormValidator
