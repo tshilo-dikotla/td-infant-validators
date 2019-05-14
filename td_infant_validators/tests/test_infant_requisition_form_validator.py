@@ -1,5 +1,5 @@
 from django.core.exceptions import ValidationError
-from django.test import TestCase, tag
+from django.test import TestCase
 
 from ..constants import TUBE
 from ..form_validators import InfantRequisitionFormValidator
