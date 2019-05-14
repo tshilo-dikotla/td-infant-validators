@@ -98,7 +98,7 @@ class InfantFuPhysicalFormValidator(InfantFormValidatorMixin, FormValidator):
                 else:
                     if prev_fu_phy.height:
                         height = cleaned_data.get('height')
-                        if cleaned_data.get('height') < prev_fu_phy.height:
+                        if height and height < prev_fu_phy.height:
                             msg = {'height':
                                    'You stated that the height for the '
                                    f'participant as '
