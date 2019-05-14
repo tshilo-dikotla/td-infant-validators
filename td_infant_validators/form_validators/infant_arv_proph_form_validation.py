@@ -1,4 +1,3 @@
-from django import forms
 from django.apps import apps as django_apps
 from django.core.exceptions import ValidationError
 from edc_constants.constants import NO, NOT_APPLICABLE, UNKNOWN
@@ -48,18 +47,15 @@ class InfantArvProphFormValidator(InfantFormValidatorMixin, FormValidator):
         if cleaned_data.get('prophylatic_nvp') == UNKNOWN and \
                 cleaned_data.get('arv_status') not in ['modified']:
             if self.get_birth_arv_visit_2000(infant_identifier) not in [UNKNOWN]:
-                self._errors.update(
-                    {'prophylatic_nvp':
-                     'The azt discharge supply in Infant Birth arv was not'
-                     ' answered as UNKNOWN, Q3 cannot be Unknown.'})
-                raise forms.ValidationError(
-                    'The azt discharge supply in Infant Birth arv was not'
-                    ' answered as UNKNOWN, Q3 cannot be Unknown.')
+                msg = {'prophylatic_nvp':
+                       'The azt discharge supply in Infant Birth arv was not'
+                       ' answered as UNKNOWN, Q3 cannot be Unknown.'}
+                self._errors.update(msg)
+                raise ValidationError(msg)
 
     def validate_taking_arv_proph_no(self):
         cleaned_data = self.cleaned_data
         if cleaned_data.get('prophylatic_nvp') == NO:
-            self._errors.update(
-                {'prophylatic_nvp': 'Infant is HEU, answer cannot be No.'})
-            raise ValidationError(
-                {'prophylatic_nvp': 'Infant is HEU, answer cannot be No.'})
+            msg = {'prophylatic_nvp': 'Infant is HEU, answer cannot be No.'}
+            self._errors.update(msg)
+            raise ValidationError(msg)
