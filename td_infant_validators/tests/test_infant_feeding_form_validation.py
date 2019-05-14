@@ -1,7 +1,7 @@
 from datetime import date
 
 from django.core.exceptions import ValidationError
-from django.test import TestCase
+from django.test import TestCase, tag
 from django.utils import timezone
 from edc_constants.constants import YES, NO, NOT_APPLICABLE
 
@@ -9,6 +9,7 @@ from ..form_validators import InfantFeedingFormValidator
 from .models import InfantVisit, Appointment, InfantFeeding
 
 
+@tag('if')
 class TestInfantFeedingFormValidator(TestCase):
 
     def setUp(self):
@@ -28,6 +29,9 @@ class TestInfantFeedingFormValidator(TestCase):
             infant_visit=self.infantvisit,
             formula_intro_date=timezone.now()
         )
+
+        InfantFeedingFormValidator.infantfeeding = 'td_infant_validators.infantfeeding'
+        InfantFeedingFormValidator.infant_visit = 'td_infant_validators.infantvisit'
 
         self.options = {
             'infant_visit': self.infantvisit,
@@ -64,8 +68,7 @@ class TestInfantFeedingFormValidator(TestCase):
         'was introduced is given"""
         self.options['formula_intro_date'] = None
         forms = InfantFeedingFormValidator(cleaned_data=self.options)
-        forms.infantfeeding = 'td_infant_validators.infantfeeding'
-        forms.infant_visit = 'td_infant_validators.infantvisit'
+
         self.assertRaises(ValidationError, forms.validate)
 
     def test_child_not_received_other_feeding_date_given(self):
@@ -73,8 +76,6 @@ class TestInfantFeedingFormValidator(TestCase):
         'the food was introduced is not given"""
         self.options['formula_intro_occur'] = NO
         forms = InfantFeedingFormValidator(cleaned_data=self.options)
-        forms.infantfeeding = 'td_infant_validators.infantfeeding'
-        forms.infant_visit = 'td_infant_validators.infantfeeding'
         self.assertRaises(ValidationError, forms.validate)
 
     def test_infant_formula_feeding_YES(self):
@@ -83,8 +84,6 @@ class TestInfantFeedingFormValidator(TestCase):
         self.options['is_first_formula'] = None
         self.options['took_formula'] = YES
         forms = InfantFeedingFormValidator(cleaned_data=self.options)
-        forms.infantfeeding = 'td_infant_validators.infantfeeding'
-        forms.infant_visit = 'td_infant_validators.infantfeeding'
         self.assertRaises(ValidationError, forms.validate)
 
     def test_infant_formula_feeding_not_yes(self):
@@ -92,8 +91,6 @@ class TestInfantFeedingFormValidator(TestCase):
          is the first reporting is N/A not YES"""
         self.options['took_formula'] = NO
         forms = InfantFeedingFormValidator(cleaned_data=self.options)
-        forms.infantfeeding = 'td_infant_validators.infantfeeding'
-        forms.infant_visit = 'td_infant_validators.infantfeeding'
         self.assertRaises(ValidationError, forms.validate)
 
     def test_infant_formula_feeding_not_yes_date_provided(self):
@@ -102,8 +99,6 @@ class TestInfantFeedingFormValidator(TestCase):
         self.options['took_formula'] = NO
         self.options['is_first_formula'] = None
         forms = InfantFeedingFormValidator(cleaned_data=self.options)
-        forms.infantfeeding = 'td_infant_validators.infantfeeding'
-        forms.infant_visit = 'td_infant_validators.infantfeeding'
         self.assertRaises(ValidationError, forms.validate)
 
     def test_infant_formula_feeding_not_yes_est_date_provided(self):
@@ -113,8 +108,6 @@ class TestInfantFeedingFormValidator(TestCase):
         self.options['is_first_formula'] = None
         self.options['date_first_formula'] = None
         forms = InfantFeedingFormValidator(cleaned_data=self.options)
-        forms.infantfeeding = 'td_infant_validators.infantfeeding'
-        forms.infant_visit = 'td_infant_validators.infantfeeding'
         self.assertRaises(ValidationError, forms.validate)
 
     def test_validate_solids(self):
@@ -123,8 +116,6 @@ class TestInfantFeedingFormValidator(TestCase):
         self.options['cereal_porridge'] = NO
         self.options['fruits_veg'] = NO
         forms = InfantFeedingFormValidator(cleaned_data=self.options)
-        forms.infantfeeding = 'td_infant_validators.infantfeeding'
-        forms.infant_visit = 'td_infant_validators.infantvisit'
         self.assertRaises(ValidationError, forms.validate)
 
     def test_validate_solids_one(self):
@@ -133,8 +124,6 @@ class TestInfantFeedingFormValidator(TestCase):
         self.options['cereal_porridge'] = NO
         self.options['fruits_veg'] = NO
         forms = InfantFeedingFormValidator(cleaned_data=self.options)
-        forms.infantfeeding = 'td_infant_validators.infantfeeding'
-        forms.infant_visit = 'td_infant_validators.infantvisit'
         self.assertRaises(ValidationError, forms.validate)
 
     def test_validate_solids_two(self):
@@ -143,8 +132,6 @@ class TestInfantFeedingFormValidator(TestCase):
         self.options['cereal_porridge'] = None
         self.options['fruits_veg'] = None
         forms = InfantFeedingFormValidator(cleaned_data=self.options)
-        forms.infantfeeding = 'td_infant_validators.infantfeeding'
-        forms.infant_visit = 'td_infant_validators.infantvisit'
         self.assertRaises(ValidationError, forms.validate)
 
     def test_validate_solids_all(self):
@@ -153,8 +140,6 @@ class TestInfantFeedingFormValidator(TestCase):
         self.options['cereal_porridge'] = YES
         self.options['fruits_veg'] = YES
         forms = InfantFeedingFormValidator(cleaned_data=self.options)
-        forms.infantfeeding = 'td_infant_validators.infantfeeding'
-        forms.infant_visit = 'td_infant_validators.infantvisit'
         self.assertRaises(ValidationError, forms.validate)
 
     def test_is_first_formula_yes_no_date(self):
@@ -162,8 +147,6 @@ class TestInfantFeedingFormValidator(TestCase):
          the date should be provided"""
         self.options['date_first_formula'] = None
         forms = InfantFeedingFormValidator(cleaned_data=self.options)
-        forms.infantfeeding = 'td_infant_validators.infantfeeding'
-        forms.infant_visit = 'td_infant_validators.infantfeeding'
         self.assertRaises(ValidationError, forms.validate)
 
     def test_is_first_formula_yes_date_estimated_field_none(self):
@@ -172,8 +155,6 @@ class TestInfantFeedingFormValidator(TestCase):
         self.options['date_first_formula'] = NO
         self.options['est_date_first_formula'] = None
         forms = InfantFeedingFormValidator(cleaned_data=self.options)
-        forms.infantfeeding = 'td_infant_validators.infantfeeding'
-        forms.infant_visit = 'td_infant_validators.infantfeeding'
         self.assertRaises(ValidationError, forms.validate)
 
     def test_is_first_formula_no_date_provided(self):
@@ -181,8 +162,6 @@ class TestInfantFeedingFormValidator(TestCase):
          the date should not be provided"""
         self.options['is_first_formula'] = NO
         forms = InfantFeedingFormValidator(cleaned_data=self.options)
-        forms.infantfeeding = 'td_infant_validators.infantfeeding'
-        forms.infant_visit = 'td_infant_validators.infantfeeding'
         self.assertRaises(ValidationError, forms.validate)
 
     def test_is_first_formula_no_date_estimated_given(self):
@@ -191,8 +170,6 @@ class TestInfantFeedingFormValidator(TestCase):
         self.options['is_first_formula'] = NO
         self.options['date_first_formula'] = None
         forms = InfantFeedingFormValidator(cleaned_data=self.options)
-        forms.infantfeeding = 'td_infant_validators.infantfeeding'
-        forms.infant_visit = 'td_infant_validators.infantfeeding'
         self.assertRaises(ValidationError, forms.validate)
 
     def test_took_cow_milk_yes(self):
@@ -200,8 +177,6 @@ class TestInfantFeedingFormValidator(TestCase):
          should not be N/A"""
         self.options['cow_milk_yes'] = NOT_APPLICABLE
         forms = InfantFeedingFormValidator(cleaned_data=self.options)
-        forms.infantfeeding = 'td_infant_validators.infantfeeding'
-        forms.infant_visit = 'td_infant_validators.infantfeeding'
         self.assertRaises(ValidationError, forms.validate)
 
     def test_took_cow_milk__not_yes(self):
@@ -209,8 +184,6 @@ class TestInfantFeedingFormValidator(TestCase):
          question13 should be N/A"""
         self.options['cow_milk'] = NO
         forms = InfantFeedingFormValidator(cleaned_data=self.options)
-        forms.infantfeeding = 'td_infant_validators.infantfeeding'
-        forms.infant_visit = 'td_infant_validators.infantfeeding'
         self.assertRaises(ValidationError, forms.validate)
 
     def test_took_milk_other_yes_animal_not_specified(self):
@@ -218,7 +191,6 @@ class TestInfantFeedingFormValidator(TestCase):
          that animal is specified"""
         self.options['other_milk'] = YES
         forms = InfantFeedingFormValidator(cleaned_data=self.options)
-        forms.infantfeeding = 'td_infant_validators.infantfeeding'
         forms.infant_visit = 'td_infant_validators.infantfeeding'
         self.assertRaises(ValidationError, forms.validate)
 
@@ -229,8 +201,6 @@ class TestInfantFeedingFormValidator(TestCase):
         self.options['other_milk_animal'] = 'Goat'
         self.options['milk_boiled'] = NOT_APPLICABLE
         forms = InfantFeedingFormValidator(cleaned_data=self.options)
-        forms.infantfeeding = 'td_infant_validators.infantfeeding'
-        forms.infant_visit = 'td_infant_validators.infantfeeding'
         self.assertRaises(ValidationError, forms.validate)
 
     def test_took_milk_other_not_yes_animal_specified(self):
@@ -238,8 +208,6 @@ class TestInfantFeedingFormValidator(TestCase):
          animal is not specified"""
         self.options['other_milk_animal'] = 'Goat'
         forms = InfantFeedingFormValidator(cleaned_data=self.options)
-        forms.infantfeeding = 'td_infant_validators.infantfeeding'
-        forms.infant_visit = 'td_infant_validators.infantfeeding'
         self.assertRaises(ValidationError, forms.validate)
 
     def test_took_milk_other_not_yes_boiled_not_not_applicable(self):
@@ -247,8 +215,6 @@ class TestInfantFeedingFormValidator(TestCase):
          answer to question 16 is N/A"""
         self.options['milk_boiled'] = YES
         forms = InfantFeedingFormValidator(cleaned_data=self.options)
-        forms.infantfeeding = 'td_infant_validators.infantfeeding'
-        forms.infant_visit = 'td_infant_validators.infantfeeding'
         self.assertRaises(ValidationError, forms.validate)
 
     def test_child_breastfed_complete_weaning_not_not_applicable(self):
@@ -256,8 +222,6 @@ class TestInfantFeedingFormValidator(TestCase):
          the answer to question24 is N/A"""
         self.options['complete_weaning'] = NO
         forms = InfantFeedingFormValidator(cleaned_data=self.options)
-        forms.infantfeeding = 'td_infant_validators.infantfeeding'
-        forms.infant_visit = 'td_infant_validators.infantfeeding'
         self.assertRaises(ValidationError, forms.validate)
 
     def test_child_not_breastfed_complete_weaning_not_applicable(self):
@@ -266,8 +230,6 @@ class TestInfantFeedingFormValidator(TestCase):
         self.options['ever_breastfeed'] = NO
         self.options['complete_weaning'] = NOT_APPLICABLE
         forms = InfantFeedingFormValidator(cleaned_data=self.options)
-        forms.infantfeeding = 'td_infant_validators.infantfeeding'
-        forms.infant_visit = 'td_infant_validators.infantfeeding'
         self.assertRaises(ValidationError, forms.validate)
 
     def test_formula_intro_occur_yes_no_foods_indicated(self):
@@ -279,6 +241,4 @@ class TestInfantFeedingFormValidator(TestCase):
         self.options['cereal_porridge'] = NO
         self.options['solid_liquid'] = NO
         forms = InfantFeedingFormValidator(cleaned_data=self.options)
-        forms.infantfeeding = 'td_infant_validators.infantfeeding'
-        forms.infant_visit = 'td_infant_validators.infantfeeding'
         self.assertRaises(ValidationError, forms.validate)
