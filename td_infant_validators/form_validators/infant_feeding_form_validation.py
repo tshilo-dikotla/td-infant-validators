@@ -54,6 +54,9 @@ class InfantFeedingFormValidator(InfantFormValidatorMixin, FormValidator):
         self.validate_breast_milk_completely_weaned()
         self.validate_other_feeding()
 
+        self.validate_other_specify(
+            field='water_used')
+
     def validate_formula_intro_date_not_future(self):
         cleaned_data = self.cleaned_data
         if(cleaned_data.get('formula_intro_date') and
