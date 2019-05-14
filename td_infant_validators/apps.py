@@ -1,5 +1,4 @@
 from django.apps import AppConfig as DjangoAppconfig
-from django.conf import settings
 
 
 class AppConfig(DjangoAppconfig):
