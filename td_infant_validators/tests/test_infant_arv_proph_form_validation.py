@@ -53,12 +53,3 @@ class TestInfantArvProphForm(TestCase):
         self.assertRaises(ValidationError, infant_arv_proph.validate)
         self.assertIn('prophylatic_nvp',
                       infant_arv_proph._errors.keys())
-
-#     def test_validate_taking_arv_proph_yes(self):
-#         """Test if the infant was not taking prophylactic arv and arv status is Never Started"""
-#         self.data['prophylatic_nvp'] = YES
-#         self.data['arv_status'] = START
-#         infant_arv_proph = InfantArvFormValidator(cleaned_data=self.data)
-#         self.assertRaises(ValidationError, infant_arv_proph.validate)
-#         self.assertIn('arv_status',
-#                       infant_arv_proph._errors.keys())

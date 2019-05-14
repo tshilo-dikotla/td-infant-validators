@@ -38,6 +38,11 @@ class InfantBirthArv(models.Model):
         help_text="if infant not yet discharged, please enter 'Not applicable'")
 
 
+class Panel(models.Model):
+
+    name = models.CharField(max_length=25)
+
+
 class InfantFuPhysical(models.Model):
 
     infant_visit = models.OneToOneField(InfantVisit, on_delete=PROTECT)
