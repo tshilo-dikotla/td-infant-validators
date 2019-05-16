@@ -10,6 +10,8 @@ class VaccinesMissedFormValidator(InfantFormValidatorMixin, FormValidator):
         self.validate_against_visit_datetime(
             self.cleaned_data.get('report_datetime'))
 
+        self.validate_other_specify('reason_missed')
+
         self.validate_vaccine_missed(cleaned_data=self.cleaned_data)
         self.validate_missed_vaccine_fields(cleaned_data=self.cleaned_data)
 
