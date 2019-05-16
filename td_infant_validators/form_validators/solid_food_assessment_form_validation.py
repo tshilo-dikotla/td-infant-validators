@@ -2,6 +2,7 @@ from edc_constants.constants import YES
 from edc_form_validators import FormValidator
 
 from .form_validator_mixin import InfantFormValidatorMixin
+from django import forms
 
 
 class SolidFoodAssessementFormValidator(InfantFormValidatorMixin, FormValidator):
@@ -10,6 +11,12 @@ class SolidFoodAssessementFormValidator(InfantFormValidatorMixin, FormValidator)
 
         self.validate_against_visit_datetime(
             self.cleaned_data.get('report_datetime'))
+
+        age_solid_food = self.cleaned_data.get('age_solid_food')
+        if int(age_solid_food) < 0:
+            raise forms.ValidationError({
+                'age_solid_food': 'Value of age solid food cannot be negative'
+                })
 
         fields = ['porridge', 'tsabana', 'meat', 'potatoes', 'carrot_swt_potato',
                   'green_veg', 'fresh_fruits', 'fullcream_milk', 'skim_milk',
