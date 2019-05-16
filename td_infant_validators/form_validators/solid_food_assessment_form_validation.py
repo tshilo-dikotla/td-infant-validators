@@ -1,4 +1,4 @@
-from edc_constants.constants import YES
+from edc_constants.constants import YES, OTHER
 from edc_form_validators import FormValidator
 
 from .form_validator_mixin import InfantFormValidatorMixin
@@ -43,8 +43,7 @@ class SolidFoodAssessementFormValidator(InfantFormValidatorMixin, FormValidator)
             )
 
         self.m2m_other_specify(
-            'Other',
+            OTHER,
             m2m_field='solid_foods',
-            field_other='solid_foods_other',
-
+            field_other='solid_foods_other'
         )
