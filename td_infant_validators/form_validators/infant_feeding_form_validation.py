@@ -88,12 +88,14 @@ class InfantFeedingFormValidator(InfantFormValidatorMixin, FormValidator):
 
     def validate_formula_intro_occur(self):
         cleaned_data = self.cleaned_data
-        prev_infant_feeding = self.infant_feeding_cls.objects.filter(
-            infant_visit__subject_identifier=cleaned_data.get(
-                'infant_visit').appointment.subject_identifier,
-            formula_intro_date__isnull=False,
-            report_datetime__lt=cleaned_data.get(
-                'report_datetime')).exclude(infant_visit=cleaned_data.get(
+        report_datetime = cleaned_data.get('report_datetime') or None
+        prev_infant_feeding = None
+        if report_datetime:
+            prev_infant_feeding = self.infant_feeding_cls.objects.filter(
+                infant_visit__subject_identifier=cleaned_data.get(
+                    'infant_visit').appointment.subject_identifier,
+                formula_intro_date__isnull=False,
+                report_datetime__lt=report_datetime).exclude(infant_visit=cleaned_data.get(
                     'infant_visit')).exclude(infant_visit=cleaned_data.get(
                         'infant_visit')).last()
         if cleaned_data.get('formula_intro_occur') == YES:
