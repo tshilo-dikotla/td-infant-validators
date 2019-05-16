@@ -10,6 +10,7 @@ class InfantFeedingFormValidator(InfantFormValidatorMixin, FormValidator):
 
     infantfeeding = 'td_infant.infantfeeding'
     infantvisit = 'td_infant.infantvisit'
+    infantbirth = 'td_infant.infantbirth'
 
     def clean(self):
         self.validate_against_visit_datetime(
@@ -65,12 +66,25 @@ class InfantFeedingFormValidator(InfantFormValidatorMixin, FormValidator):
     def validate_formula_intro_date_not_future(self):
         cleaned_data = self.cleaned_data
         if(cleaned_data.get('formula_intro_date') and
-           cleaned_data.get('formula_intro_date') >
+           cleaned_data.get('formula_intro_date') > 
            cleaned_data.get('infant_visit').report_datetime.date()):
             raise forms.ValidationError({
                 'formula_intro_date': 'Date cannot be future to visit date.'
                 'Visit date is {}.'.format(
                     cleaned_data.get('infant_visit').report_datetime.date())})
+
+    def validate_formula_intro_date_not_before_birth(self):
+        cleaned_data = self.cleaned_data
+        infant_birth = self.infant_birth_cls.objects.filter(
+            subject_identifier=cleaned_data.get(
+                'infant_visit').appointment.subject_identifier)
+        if(cleaned_data.get('formula_intro_date') and
+           cleaned_data.get(
+               'formula_intro_date') > infant_birth.report_datetime.date()):
+            raise forms.ValidationError({
+                'formula_intro_date': 'Date cannot be future to birth date.'
+                'Birth date is {}.'.format(
+                    infant_birth.report_datetime.date())})
 
     def validate_formula_intro_date(self, prev_infant_feeding=None):
         cleaned_data = self.cleaned_data
@@ -248,3 +262,7 @@ class InfantFeedingFormValidator(InfantFormValidatorMixin, FormValidator):
     @property
     def infant_visit_cls(self):
         return django_apps.get_model(self.infantvisit)
+
+    @property
+    def infant_birth_cls(self):
+        return django_apps.get_model(self.infantbirth)
