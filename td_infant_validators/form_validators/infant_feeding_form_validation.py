@@ -46,7 +46,7 @@ class InfantFeedingFormValidator(InfantFormValidatorMixin, FormValidator):
             field_applicable='complete_weaning')
 
         self.applicable_if(
-            NO,
+            YES,
             field='ever_breastfeed',
             field_applicable='weaned_completely')
 
