@@ -47,3 +47,14 @@ class SolidFoodAssessementFormValidator(InfantFormValidatorMixin, FormValidator)
             m2m_field='solid_foods',
             field_other='solid_foods_other'
         )
+
+        self.m2m_required_if(
+            YES,
+            field='rations',
+            m2m_field='rations_receviced')
+
+        self.m2m_other_specify(
+            OTHER,
+            m2m_field='rations_receviced',
+            field_other='rations_receviced_other'
+        )
