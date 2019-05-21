@@ -1,5 +1,6 @@
 from django import forms
-from edc_constants.constants import YES, OTHER
+from django.core.exceptions import ValidationError
+from edc_constants.constants import YES, OTHER, NOT_APPLICABLE
 from edc_form_validators import FormValidator
 
 from .form_validator_mixin import InfantFormValidatorMixin
@@ -48,10 +49,23 @@ class SolidFoodAssessementFormValidator(InfantFormValidatorMixin, FormValidator)
             field_other='solid_foods_other'
         )
 
-        self.m2m_required_if(
-            YES,
-            field='rations',
-            m2m_field='rations_receviced')
+        qs = self.cleaned_data.get('rations_receviced')
+        if qs and qs.count() >= 1:
+            selected = {obj.short_name: obj.name for obj in qs}
+            if (self.cleaned_data.get('rations') == YES and
+                    NOT_APPLICABLE in selected):
+                message = {
+                    'rations_receviced':
+                    'This field is applicable.'}
+                self._errors.update(message)
+                raise ValidationError(message)
+            elif (self.cleaned_data.get('rations') != YES and
+                    NOT_APPLICABLE not in selected):
+                message = {
+                    'rations_receviced':
+                    'This field is not applicable.'}
+                self._errors.update(message)
+                raise ValidationError(message)
 
         self.m2m_other_specify(
             OTHER,
