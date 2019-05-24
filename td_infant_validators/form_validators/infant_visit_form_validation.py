@@ -76,13 +76,13 @@ class InfantVisitFormValidator(VisitFormValidator, InfantFormValidatorMixin,
 
         try:
             action_item = action_item_model_cls.objects.get(
-                subject_identifier=self.subject_identifier,
+                subject_identifier=self.cleaned_data.get('appointment').subject_identifier,
                 action_type__name=INFANTOFF_STUDY_ACTION,
                 status=NEW)
         except action_item_model_cls.DoesNotExist:
             try:
                 infant_offstudy_cls.objects.get(
-                    subject_identifier=self.subject_identifier)
+                    subject_identifier=self.cleaned_data.get('appointment').subject_identifier)
             except infant_offstudy_cls.DoesNotExist:
                 pass
             else:
