@@ -2,7 +2,8 @@ from django import forms
 from django.apps import apps as django_apps
 from django.core.exceptions import ValidationError
 from edc_action_item.site_action_items import site_action_items
-from edc_constants.constants import ON_STUDY, NEW, NO, OFF_STUDY, YES, PARTICIPANT
+from edc_constants.constants import ON_STUDY, NEW, NO, OFF_STUDY, YES
+from edc_constants.constants import PARTICIPANT, ALIVE, DEAD
 from edc_form_validators import FormValidator
 from edc_visit_tracking.constants import SCHEDULED, LOST_VISIT
 from edc_visit_tracking.form_validators import VisitFormValidator
@@ -17,15 +18,23 @@ class InfantVisitFormValidator(VisitFormValidator, InfantFormValidatorMixin,
 
     def clean(self):
         cleaned_data = self.cleaned_data
-        infant_identifier = cleaned_data.get('appointment').subject_identifier
-        report_datetime = cleaned_data.get('report_datetime')
+        self.infant_identifier = cleaned_data.get('appointment').subject_identifier
+        self.report_datetime = cleaned_data.get('report_datetime')
 
-        self.validate_against_birth_date(infant_identifier=infant_identifier,
-                                         report_datetime=report_datetime)
+        super().clean()
+
+        self.validate_against_birth_date(infant_identifier=self.infant_identifier,
+                                         report_datetime=self.report_datetime)
 
         self.validate_other_specify('information_provider')
 
         self.validate_study_status()
+
+        self.validate_death()
+
+        self.validate_is_present()
+
+        self.validate_last_alive_date()
 
     def validate_data_collection(self):
         if (self.cleaned_data.get('reason') == SCHEDULED
@@ -53,14 +62,32 @@ class InfantVisitFormValidator(VisitFormValidator, InfantFormValidatorMixin,
                     {'info_source': 'Source of information must be from '
                      'participant if participant is present.'})
 
+    def validate_death(self):
+        if (self.cleaned_data.get('survival_status') == DEAD
+                and self.cleaned_data.get('study_status') != OFF_STUDY):
+            msg = {'study_status': 'Participant is deceased, study status '
+                   'should be off study.'}
+            self._errors.update(msg)
+            raise ValidationError(msg)
+        if self.cleaned_data.get('survival_status') != ALIVE:
+            if (self.cleaned_data.get('is_present') == YES
+                    or self.cleaned_data.get('info_source') == PARTICIPANT):
+                msg = {'survival_status': 'Participant cannot be present or '
+                       'source of information if their survival status is not'
+                       'alive.'}
+                self._errors.update(msg)
+                raise ValidationError(msg)
+
     def validate_last_alive_date(self):
         """Returns an instance of the current maternal consent or
         raises an exception if not found."""
 
-        latest_consent = self.validate_against_consent()
+        infant_birth = self.validate_against_birth_date(
+            infant_identifier=self.infant_identifier,
+            report_datetime=self.report_datetime)
         last_alive_date = self.cleaned_data.get('last_alive_date')
-        if last_alive_date and last_alive_date < latest_consent.consent_datetime.date():
-            msg = {'last_alive_date': 'Date cannot be before consent date'}
+        if last_alive_date and last_alive_date < infant_birth.report_datetime.date():
+            msg = {'last_alive_date': 'Date cannot be before birth date'}
             self._errors.update(msg)
             raise ValidationError(msg)
 
