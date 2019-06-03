@@ -10,11 +10,12 @@ from edc_visit_tracking.form_validators import VisitFormValidator
 
 from td_prn.action_items import INFANTOFF_STUDY_ACTION
 
+from .crf_form_validator import InfantCRFFormValidator
 from .form_validator_mixin import InfantFormValidatorMixin
 
 
-class InfantVisitFormValidator(VisitFormValidator, InfantFormValidatorMixin,
-                               FormValidator):
+class InfantVisitFormValidator(VisitFormValidator, InfantCRFFormValidator,
+                               InfantFormValidatorMixin, FormValidator):
 
     def clean(self):
         cleaned_data = self.cleaned_data
