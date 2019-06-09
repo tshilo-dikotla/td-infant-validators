@@ -21,8 +21,6 @@ class InfantBirthFormValidator(CrfOffStudyFormValidator, FormValidator):
 
     def clean(self):
         self.subject_identifier = self.cleaned_data.get('subject_identifier')
-        self.validate_against_visit_datetime(
-            self.cleaned_data.get('report_datetime'))
         super().clean()
 
         self.validate_dob()
@@ -58,4 +56,24 @@ class InfantBirthFormValidator(CrfOffStudyFormValidator, FormValidator):
             msg = {'report_datetime': 'Infant enrollment date cannot be '
                    'before infant date of birth.'}
             self._errors.update(msg)
+        try:
+            maternal_identifier = self.registered_subject_cls.objects.get(
+                subject_identifier=cleaned_data.get(
+                    'subject_identifier')).relative_identifier
+            maternal_lab_del = self.maternal_lab_del_cls.objects.get(
+                subject_identifier=maternal_identifier)
+            report_datetime = cleaned_data.get('report_datetime').date()
+            if not report_datetime == maternal_lab_del.delivery_datetime.date():
+                msg = {'report_datetime':
+                       'Infant report datetime must match maternal delivery date of'
+                       f' {maternal_lab_del.delivery_datetime.date()}. '
+                       f'You wrote {report_datetime}'}
+                self._errors.update(msg)
+                raise ValidationError(msg)
+
+        except self.registered_subject_cls.DoesNotExist:
+            raise ValidationError('Registered Subject does not exist.')
+        except self.maternal_lab_del_cls.DoesNotExist:
+            raise ValidationError('Cannot find maternal labour and delivery '
+                                  'form for this infant! This is not expected.')
             raise ValidationError(msg)
