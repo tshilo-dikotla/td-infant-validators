@@ -32,7 +32,7 @@ class TestInfantFeedingFormValidator(TestCase):
 
         InfantFeedingFormValidator.infantfeeding = 'td_infant_validators.infantfeeding'
         InfantFeedingFormValidator.infant_visit = 'td_infant_validators.infantvisit'
-
+        InfantFeedingFormValidator.infant_birth = 'td_infant_validators.infantbirth'
         self.options = {
             'infant_visit': self.infantvisit,
             'other_feeding': YES,

@@ -14,7 +14,7 @@ class SolidFoodAssessementFormValidator(InfantFormValidatorMixin, FormValidator)
             self.cleaned_data.get('report_datetime'))
 
         age_solid_food = self.cleaned_data.get('age_solid_food')
-        if int(age_solid_food) < 0:
+        if age_solid_food and int(age_solid_food) < 0:
             raise forms.ValidationError({
                 'age_solid_food': 'Value of age solid food cannot be negative'
             })
