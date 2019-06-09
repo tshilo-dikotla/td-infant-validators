@@ -2,17 +2,21 @@ from django import forms
 from django.apps import apps as django_apps
 from edc_constants.constants import YES, NO, NOT_APPLICABLE
 from edc_form_validators import FormValidator
-
+from td_infant_validators.form_validators import CrfOffStudyFormValidator
 from .form_validator_mixin import InfantFormValidatorMixin
 
 
-class InfantFeedingFormValidator(InfantFormValidatorMixin, FormValidator):
+class InfantFeedingFormValidator(InfantFormValidatorMixin,
+                                 CrfOffStudyFormValidator, FormValidator):
 
     infantfeeding = 'td_infant.infantfeeding'
     infantvisit = 'td_infant.infantvisit'
     infantbirth = 'td_infant.infantbirth'
 
     def clean(self):
+        self.subject_identifier = self.cleaned_data.get(
+            'infant_visit').appointment.subject_identifier
+
         self.validate_against_visit_datetime(
             self.cleaned_data.get('report_datetime'))
         self.validate_formula_intro_date_not_future()

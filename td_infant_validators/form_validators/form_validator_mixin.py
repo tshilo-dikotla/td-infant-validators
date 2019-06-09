@@ -29,7 +29,7 @@ class InfantFormValidatorMixin:
                 return infant_birth
 
     def validate_against_visit_datetime(self, report_datetime):
-        infant_visit = self.cleaned_data.get('infant_visit')
-        if report_datetime and report_datetime < infant_visit.report_datetime:
+        if report_datetime and report_datetime < \
+                self.cleaned_data.get('report_datetime'):
             raise forms.ValidationError(
                 "Report datetime cannot be before visit datetime.")

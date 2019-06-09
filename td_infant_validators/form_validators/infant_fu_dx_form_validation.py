@@ -1,20 +1,26 @@
 from django.core.exceptions import ValidationError
 from edc_constants.constants import YES, NO
 from edc_form_validators import FormValidator
+from td_infant_validators.form_validators import CrfOffStudyFormValidator
 
 from .form_validator_mixin import InfantFormValidatorMixin
 
 
-class InfantFuDxFormValidator(InfantFormValidatorMixin, FormValidator):
+class InfantFuDxFormValidator(InfantFormValidatorMixin, CrfOffStudyFormValidator, FormValidator):
 
     def clean(self):
+        self.subject_identifier = self.cleaned_data.get(
+            'infant_visit').appointment.subject_identifier
         self.validate_against_visit_datetime(
             self.cleaned_data.get('report_datetime'))
 
 
-class InfantFuDxItemsFormValidator(InfantFormValidatorMixin, FormValidator):
+class InfantFuDxItemsFormValidator(InfantFormValidatorMixin,
+                                   CrfOffStudyFormValidator, FormValidator):
 
     def clean(self):
+        self.subject_identifier = self.cleaned_data.get(
+            'infant_visit').appointment.subject_identifier
         self.validate_against_visit_datetime(
             self.cleaned_data.get('report_datetime'))
         self.validate_health_facility(cleaned_data=self.cleaned_data)
