@@ -2,8 +2,10 @@ from django.apps import apps as django_apps
 from django.core.exceptions import ValidationError
 from edc_form_validators import FormValidator
 
+from .crf_offstudy_form_validator import CrfOffStudyFormValidator
 
-class InfantBirthFormValidator(FormValidator):
+
+class InfantBirthFormValidator(CrfOffStudyFormValidator, FormValidator):
 
     registered_subject_model = 'edc_registration.registeredsubject'
 
@@ -18,6 +20,11 @@ class InfantBirthFormValidator(FormValidator):
         return django_apps.get_model(self.maternal_lab_del_model)
 
     def clean(self):
+        self.subject_identifier = self.cleaned_data.get('subject_identifier')
+        self.validate_against_visit_datetime(
+            self.cleaned_data.get('report_datetime'))
+        super().clean()
+
         self.validate_dob()
         self.validate_report_datetime()
 

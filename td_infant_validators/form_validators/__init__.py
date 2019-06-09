@@ -1,5 +1,5 @@
 from .appointment_form_validator import AppointmentFormValidator
-from .crf_form_validator import InfantCRFFormValidator
+from .crf_form_validator import CrfOffStudyFormValidator
 from .form_validator_mixin import InfantFormValidatorMixin
 from .infant_arv_proph_form_validation import InfantArvProphFormValidator
 from .infant_birth_arv_form_validation import InfantBirthArvFormValidator

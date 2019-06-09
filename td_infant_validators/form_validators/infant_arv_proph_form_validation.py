@@ -3,10 +3,12 @@ from django.core.exceptions import ValidationError
 from edc_constants.constants import NO, NOT_APPLICABLE, UNKNOWN
 from edc_form_validators import FormValidator
 
+from .crf_offstudy_form_validator import CrfOffStudyFormValidator
 from .form_validator_mixin import InfantFormValidatorMixin
 
 
-class InfantArvProphFormValidator(InfantFormValidatorMixin, FormValidator):
+class InfantArvProphFormValidator(InfantFormValidatorMixin, CrfOffStudyFormValidator,
+                                  FormValidator):
 
     infantvisit = 'td_infant.infantvisit'
     infantbirtharv = 'td_infant.infantbirtharv'
@@ -36,6 +38,12 @@ class InfantArvProphFormValidator(InfantFormValidatorMixin, FormValidator):
         return NOT_APPLICABLE
 
     def clean(self):
+        self.subject_identifier = self.cleaned_data.get(
+            'infant_visit').appointment.subject_identifier
+        self.validate_against_visit_datetime(
+            self.cleaned_data.get('report_datetime'))
+        super().clean()
+
         self.validate_against_visit_datetime(
             self.cleaned_data.get('report_datetime'))
         self.validate_taking_arv_proph_unknown()

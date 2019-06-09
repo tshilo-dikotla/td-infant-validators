@@ -1,20 +1,20 @@
 from django import forms
 from django.apps import apps as django_apps
 from django.core.exceptions import ValidationError
-from edc_action_item.site_action_items import site_action_items
 from edc_constants.constants import ON_STUDY, NEW, NO, OFF_STUDY, YES
 from edc_constants.constants import PARTICIPANT, ALIVE, DEAD
 from edc_form_validators import FormValidator
 from edc_visit_tracking.constants import SCHEDULED, LOST_VISIT
 from edc_visit_tracking.form_validators import VisitFormValidator
 
+from edc_action_item.site_action_items import site_action_items
 from td_prn.action_items import INFANTOFF_STUDY_ACTION
 
-from .crf_form_validator import InfantCRFFormValidator
+from .crf_offstudy_form_validator import CrfOffStudyFormValidator
 from .form_validator_mixin import InfantFormValidatorMixin
 
 
-class InfantVisitFormValidator(VisitFormValidator, InfantCRFFormValidator,
+class InfantVisitFormValidator(VisitFormValidator, CrfOffStudyFormValidator,
                                InfantFormValidatorMixin, FormValidator):
 
     def clean(self):

@@ -7,7 +7,7 @@ from td_prn.action_items import INFANTOFF_STUDY_ACTION
 from td_prn.action_items import INFANT_DEATH_REPORT_ACTION
 
 
-class InfantCRFFormValidator:
+class CrfOffStudyFormValidator:
 
     def clean(self):
         if self.instance and not self.instance.id:
