@@ -2,7 +2,7 @@ from django import forms
 from django.apps import apps as django_apps
 from edc_constants.constants import YES, NO, NOT_APPLICABLE
 from edc_form_validators import FormValidator
-from td_infant_validators.form_validators import CrfOffStudyFormValidator
+from .crf_offstudy_form_validator import CrfOffStudyFormValidator
 from .form_validator_mixin import InfantFormValidatorMixin
 
 
@@ -23,6 +23,7 @@ class InfantFeedingFormValidator(InfantFormValidatorMixin,
         self.validate_formula_intro_occur()
         self.validate_solids()
         self.validate_took_formula()
+        super().clean()
 
         self.applicable_if(
             YES,
@@ -70,7 +71,7 @@ class InfantFeedingFormValidator(InfantFormValidatorMixin,
     def validate_formula_intro_date_not_future(self):
         cleaned_data = self.cleaned_data
         if(cleaned_data.get('formula_intro_date') and
-           cleaned_data.get('formula_intro_date') > 
+           cleaned_data.get('formula_intro_date') >
            cleaned_data.get('infant_visit').report_datetime.date()):
             raise forms.ValidationError({
                 'formula_intro_date': 'Date cannot be future to visit date.'

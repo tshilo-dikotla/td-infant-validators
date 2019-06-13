@@ -1,14 +1,28 @@
-from django.test import TestCase, tag
 from django.core.exceptions import ValidationError
+from django.test import TestCase, tag
+from edc_base.utils import get_utcnow
 from edc_constants.constants import YES, OTHER
+
 from ..form_validators import KaraboTBHistoryFormValidator
+from .models import InfantVisit, Appointment
 
 
 @tag('karabo_history')
 class TestKaraboTBHistoryForm(TestCase):
 
     def setUp(self):
+        appointment = Appointment.objects.create(
+            subject_identifier='2334432',
+            appt_datetime=get_utcnow(),
+            visit_code='2000',
+            visit_instance='0')
+
+        self.infant_visit = InfantVisit.objects.create(
+            subject_identifier='12345323',
+            appointment=appointment)
+
         self.data = {
+            'infant_visit': self.infant_visit,
             'coughing': YES,
             'coughing_rel': OTHER,
             'other_coughing_rel': None,

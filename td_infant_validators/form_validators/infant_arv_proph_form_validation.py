@@ -7,7 +7,8 @@ from .crf_offstudy_form_validator import CrfOffStudyFormValidator
 from .form_validator_mixin import InfantFormValidatorMixin
 
 
-class InfantArvProphFormValidator(InfantFormValidatorMixin, CrfOffStudyFormValidator,
+class InfantArvProphFormValidator(InfantFormValidatorMixin,
+                                  CrfOffStudyFormValidator,
                                   FormValidator):
 
     infantvisit = 'td_infant.infantvisit'
@@ -40,12 +41,11 @@ class InfantArvProphFormValidator(InfantFormValidatorMixin, CrfOffStudyFormValid
     def clean(self):
         self.subject_identifier = self.cleaned_data.get(
             'infant_visit').appointment.subject_identifier
-        self.validate_against_visit_datetime(
-            self.cleaned_data.get('report_datetime'))
         super().clean()
 
         self.validate_against_visit_datetime(
             self.cleaned_data.get('report_datetime'))
+
         self.validate_taking_arv_proph_unknown()
         self.validate_taking_arv_proph_no()
 
