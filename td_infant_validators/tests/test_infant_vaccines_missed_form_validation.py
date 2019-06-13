@@ -1,9 +1,10 @@
 from django.core.exceptions import ValidationError
 from django.test import TestCase, tag
-from edc_constants.constants import YES, NO
 from edc_base.utils import get_utcnow
-from .models import Appointment, InfantVisit, InfantFuImmunizations
+from edc_constants.constants import YES, NO
+
 from ..form_validators import VaccinesMissedFormValidator
+from .models import Appointment, InfantVisit, InfantFuImmunizations
 
 
 @tag('missed')
@@ -15,16 +16,17 @@ class TestVaccinesMissedFormValidator(TestCase):
             subject_identifier=subject_identifier,
             appt_datetime=get_utcnow(),
             visit_code='1000')
-        infant_visit = InfantVisit.objects.create(
+        self.infant_visit = InfantVisit.objects.create(
             subject_identifier=appointment.subject_identifier,
             appointment=appointment)
         self.infant_fu_immunizations = InfantFuImmunizations.objects.create(
-            infant_visit=infant_visit,
+            infant_visit=self.infant_visit,
             vaccines_received=NO,
             vaccines_missed=YES)
 
     def test_infant_fu_immunization_vaccine_missed_yes_name_required(self):
         cleaned_data = {
+            'infant_visit': self.infant_visit,
             'infant_fu_immunizations': self.infant_fu_immunizations,
             'missed_vaccine_name': None,
         }
@@ -35,6 +37,7 @@ class TestVaccinesMissedFormValidator(TestCase):
 
     def test_infant_fu_immunization_vaccine_missed_yes_name_given(self):
         cleaned_data = {
+            'infant_visit': self.infant_visit,
             'infant_fu_immunizations': self.infant_fu_immunizations,
             'missed_vaccine_name': 'Polio',
             'reason_missed': 'missed scheduled vaccination',
@@ -50,6 +53,7 @@ class TestVaccinesMissedFormValidator(TestCase):
         self.infant_fu_immunizations.vaccines_missed = NO
         self.infant_fu_immunizations.save()
         cleaned_data = {
+            'infant_visit': self.infant_visit,
             'infant_fu_immunizations': self.infant_fu_immunizations,
             'missed_vaccine_name': 'Polio',
         }
@@ -62,6 +66,7 @@ class TestVaccinesMissedFormValidator(TestCase):
         self.infant_fu_immunizations.vaccines_missed = NO
         self.infant_fu_immunizations.save()
         cleaned_data = {
+            'infant_visit': self.infant_visit,
             'infant_fu_immunizations': self.infant_fu_immunizations,
             'missed_vaccine_name': None,
         }
@@ -74,6 +79,7 @@ class TestVaccinesMissedFormValidator(TestCase):
 
     def test_missed_vaccine_name_given_reason_required(self):
         cleaned_data = {
+            'infant_visit': self.infant_visit,
             'infant_fu_immunizations': self.infant_fu_immunizations,
             'missed_vaccine_name': 'Polio',
             'reason_missed': None
@@ -85,6 +91,7 @@ class TestVaccinesMissedFormValidator(TestCase):
 
     def test_missed_vaccine_name_given_reason_provided(self):
         cleaned_data = {
+            'infant_visit': self.infant_visit,
             'infant_fu_immunizations': self.infant_fu_immunizations,
             'missed_vaccine_name': 'Polio',
             'reason_missed': 'missed scheduled vaccination',
@@ -100,6 +107,7 @@ class TestVaccinesMissedFormValidator(TestCase):
         self.infant_fu_immunizations.vaccines_missed = NO
         self.infant_fu_immunizations.save()
         cleaned_data = {
+            'infant_visit': self.infant_visit,
             'infant_fu_immunizations': self.infant_fu_immunizations,
             'missed_vaccine_name': None,
             'reason_missed': 'missed scheduled vaccination'
@@ -113,6 +121,7 @@ class TestVaccinesMissedFormValidator(TestCase):
         self.infant_fu_immunizations.vaccines_missed = NO
         self.infant_fu_immunizations.save()
         cleaned_data = {
+            'infant_visit': self.infant_visit,
             'infant_fu_immunizations': self.infant_fu_immunizations,
             'missed_vaccine_name': None,
             'reason_missed': None,

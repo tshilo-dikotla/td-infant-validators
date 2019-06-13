@@ -1,10 +1,7 @@
-from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.utils import timezone
-from edc_constants.constants import YES, NO, UNKNOWN
+from edc_constants.constants import YES
 
-from ..constants import MODIFIED, START
-from ..form_validators import InfantBirthDataFormValidator
 from .models import InfantVisit, Appointment, InfantBirthArv
 
 
@@ -24,10 +21,3 @@ class TestInfantBirthFeedingVaccineForm(TestCase):
         InfantBirthArv.objects.create(
             azt_discharge_supply=YES,
             infant_visit=infant_visit)
-
-        self.data = {
-            'report_datetime': timezone.now(),
-            'infant_visit': infant_visit,
-            'prophylatic_nvp': YES,
-            'arv_status': MODIFIED,
-        }

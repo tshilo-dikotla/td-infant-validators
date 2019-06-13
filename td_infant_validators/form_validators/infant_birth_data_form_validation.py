@@ -12,9 +12,6 @@ class InfantBirthDataFormValidator(InfantFormValidatorMixin,
     def clean(self):
         self.subject_identifier = self.cleaned_data.get(
             'infant_visit').appointment.subject_identifier
-
-        self.validate_against_visit_datetime(
-            self.cleaned_data.get('report_datetime'))
         super().clean()
 
         self.validate_against_visit_datetime(

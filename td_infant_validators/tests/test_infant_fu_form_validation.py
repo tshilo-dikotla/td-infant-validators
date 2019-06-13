@@ -22,6 +22,7 @@ class TestInfantFuFormValidator(TestCase):
             appointment=appointment)
 
         self.options = {
+            'infant_visit': self.infant_visit,
             'current_hiv_status': POS,
             'evidence_hiv_status': YES,
             'will_get_arvs': YES,

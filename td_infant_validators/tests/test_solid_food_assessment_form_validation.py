@@ -1,21 +1,33 @@
-from django.test import TestCase, tag
-from edc_constants.constants import YES
 from django.core.exceptions import ValidationError
-from ..form_validators import SolidFoodAssessementFormValidator
+from django.test import TestCase, tag
+from edc_base.utils import get_utcnow
+from edc_constants.constants import YES
 
-from .models import Foods
+from ..form_validators import SolidFoodAssessementFormValidator
+from .models import Foods, InfantVisit, Appointment
 
 
 @tag('solidfood')
 class TestSolidFoodAssessementFormValidator(TestCase):
 
     def setUp(self):
+        appointment = Appointment.objects.create(
+            subject_identifier='2334432',
+            appt_datetime=get_utcnow(),
+            visit_code='2000',
+            visit_instance='0')
+
+        self.infant_visit = InfantVisit.objects.create(
+            subject_identifier='12345323',
+            appointment=appointment)
+
         self.solid_foods = Foods.objects.create(
             name="Other", short_name="Other")
         self.solid_foods = Foods.objects.create(
             name="Tsabana", short_name="Tsabana")
 
-        self.options = {'age_solid_food': 7,
+        self.options = {'infant_visit': self.infant_visit,
+                        'age_solid_food': 7,
                         'solid_foods': Foods.objects.all(),
                         'solid_foods_other': None,
                         'porridge': YES,

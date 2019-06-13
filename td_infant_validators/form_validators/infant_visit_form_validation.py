@@ -19,12 +19,13 @@ class InfantVisitFormValidator(VisitFormValidator, CrfOffStudyFormValidator,
 
     def clean(self):
         cleaned_data = self.cleaned_data
-        self.infant_identifier = cleaned_data.get('appointment').subject_identifier
         self.report_datetime = cleaned_data.get('report_datetime')
 
+        self.subject_identifier = self.cleaned_data.get(
+            'appointment').subject_identifier
         super().clean()
 
-        self.validate_against_birth_date(infant_identifier=self.infant_identifier,
+        self.validate_against_birth_date(infant_identifier=self.subject_identifier,
                                          report_datetime=self.report_datetime)
 
         self.validate_other_specify('information_provider')
@@ -84,7 +85,7 @@ class InfantVisitFormValidator(VisitFormValidator, CrfOffStudyFormValidator,
         raises an exception if not found."""
 
         infant_birth = self.validate_against_birth_date(
-            infant_identifier=self.infant_identifier,
+            infant_identifier=self.subject_identifier,
             report_datetime=self.report_datetime)
         last_alive_date = self.cleaned_data.get('last_alive_date')
         if last_alive_date and last_alive_date < infant_birth.report_datetime.date():
