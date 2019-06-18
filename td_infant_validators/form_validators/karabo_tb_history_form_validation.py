@@ -17,63 +17,36 @@ class KaraboTBHistoryFormValidator(InfantFormValidatorMixin,
         self.validate_against_visit_datetime(
             self.cleaned_data.get('report_datetime'))
 
-        self.required_if(
-            YES,
-            field='coughing',
-            field_required='coughing_rel'
-        )
+        fields = ['coughing', 'fever', 'weight_loss',
+                  'night_sweats', 'diagnosis']
 
-        self.validate_other_specify(
-            field='coughing_rel',
-            other_specify_field='other_coughing_rel',
-            other_stored_value=OTHER)
+        for field in fields:
+            qs = self.cleaned_data.get(field + '_rel')
+            if qs and qs.count() >= 1:
+                selected = {obj.short_name: obj.name for obj in qs}
+                if self.cleaned_data.get(field) in [NO, 'Dont_know']:
+                    if NOT_APPLICABLE not in selected and qs.count() <= 1:
+                        message = {
+                            field + '_rel':
+                            'This field is not applicable.'}
+                        self._errors.update(message)
+                        raise ValidationError(message)
 
-        self.required_if(
-            YES,
-            field='fever',
-            field_required='fever_rel'
-        )
+                    elif NOT_APPLICABLE in selected and qs.count() > 1:
+                        message = {
+                            field + '_rel':
+                            'This field should be Not applicable only.'}
+                        self._errors.update(message)
+                        raise ValidationError(message)
+                elif (self.cleaned_data.get(field) == YES and
+                        NOT_APPLICABLE in selected):
+                    message = {
+                        field + '_rel':
+                        'This field is applicable.'}
+                    self._errors.update(message)
+                    raise ValidationError(message)
 
-        self.validate_other_specify(
-            field='fever_rel',
-            other_specify_field='other_fever_rel',
-            other_stored_value=OTHER)
-
-        self.required_if(
-            YES,
-            field='weight_loss',
-            field_required='weight_loss_rel'
-        )
-
-        self.validate_other_specify(
-            field='weight_loss_rel',
-            other_specify_field='other_weight_loss',
-            other_stored_value=OTHER)
-
-        self.required_if(
-            YES,
-            field='night_sweats',
-            field_required='night_sweats_rel'
-        )
-
-        self.validate_other_specify(
-            field='night_sweats_rel',
-            other_specify_field='other_night_sweats',
-            other_stored_value=OTHER)
-
-        self.required_if(
-            YES,
-            field='diagnosis',
-            field_required='diagnosis_rel'
-        )
-
-        self.validate_other_specify(
-            field='diagnosis_rel',
-            other_specify_field='other_diagnosis_rel',
-            other_stored_value=OTHER)
-
-        self.required_if(
-            YES,
-            field='tb_exposure',
-            field_required='tb_exposure_det'
-        )
+            self.m2m_other_specify(
+                OTHER,
+                m2m_field=field + '_rel',
+                field_other='other_' + field + '_rel')
