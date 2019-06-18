@@ -52,3 +52,8 @@ class KaraboTBHistoryFormValidator(InfantFormValidatorMixin,
                 OTHER,
                 m2m_field=field + '_rel',
                 field_other='other_' + field + '_rel')
+
+        self.required_if(
+            YES,
+            field='tb_exposure',
+            field_required='tb_exposure_det')
