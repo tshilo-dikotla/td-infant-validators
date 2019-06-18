@@ -27,7 +27,7 @@ class KaraboTBHistoryFormValidator(InfantFormValidatorMixin,
             if qs and qs.count() >= 1:
                 selected = {obj.short_name: obj.name for obj in qs}
                 if self.cleaned_data.get(field) in [NO, 'Dont_know']:
-                    if NOT_APPLICABLE not in selected and qs.count() <= 1:
+                    if NOT_APPLICABLE not in selected:
                         message = {
                             field + '_rel':
                             'This field is not applicable.'}
