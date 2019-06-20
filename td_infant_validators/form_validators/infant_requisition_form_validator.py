@@ -24,12 +24,16 @@ class InfantRequisitionFormValidator(InfantFormValidatorMixin,
         self.validate_against_visit_datetime(
             self.cleaned_data.get('report_datetime'))
 
+        self.required_if(
+            YES,
+            field='is_drawn',
+            field_required='volume_units')
+
         panel = self.cleaned_data.get('panel').name
         volume_units = self.cleaned_data.get('volume_units')
         estimated_volume = self.cleaned_data.get('estimated_volume')
 
-        if panel == 'infant_paxgene' and \
-                self.cleaned_data.get('is_drawn') == YES:
+        if panel == 'infant_paxgene':
             if volume_units != 'Drops':
                 raise ValidationError({
                     'volume_units': 'Volume units for paxgene '
@@ -40,10 +44,10 @@ class InfantRequisitionFormValidator(InfantFormValidatorMixin,
                     raise ValidationError({
                         'estimated_volume': 'Volume value for paxgene'
                         ' should be between 5 -10 drops'})
-
-        self.required_if(
-            YES,
-            field='is_drawn',
-            field_required='volume_units')
+        else:
+            if volume_units and volume_units == 'Drops':
+                raise ValidationError({
+                    'volume_units': f'Volume units for {panel} '
+                    'should be in mL'})
         super().clean()
 
