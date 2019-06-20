@@ -1,4 +1,5 @@
 from django.core.exceptions import ValidationError
+from edc_constants.constants import YES, NO
 from edc_form_validators import FormValidator
 
 from .crf_offstudy_form_validator import CrfOffStudyFormValidator
@@ -19,7 +20,30 @@ class InfantRequisitionFormValidator(InfantFormValidatorMixin,
                 raise ValidationError(msg)
         self.subject_identifier = self.cleaned_data.get(
             'infant_visit').appointment.subject_identifier
-        super().clean()
 
         self.validate_against_visit_datetime(
             self.cleaned_data.get('report_datetime'))
+
+        panel = self.cleaned_data.get('panel').name
+        volume_units = self.cleaned_data.get('volume_units')
+        estimated_volume = self.cleaned_data.get('estimated_volume')
+
+        if panel == 'infant_paxgene' and \
+                self.cleaned_data.get('is_drawn') == YES:
+            if volume_units != 'Drops':
+                raise ValidationError({
+                    'volume_units': 'Volume units for paxgene '
+                    'should be in drops'})
+
+            if estimated_volume and \
+                    estimated_volume not in range(5, 11):
+                    raise ValidationError({
+                        'estimated_volume': 'Volume value for paxgene'
+                        ' should be between 5 -10 drops'})
+
+        self.required_if(
+            YES,
+            field='is_drawn',
+            field_required='volume_units')
+        super().clean()
+
