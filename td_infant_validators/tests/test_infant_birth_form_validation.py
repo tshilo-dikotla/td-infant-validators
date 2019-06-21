@@ -11,11 +11,11 @@ class TestInfantBirthFormValidator(TestCase):
 
     def setUp(self):
         registered_subject_model = 'td_infant_validators.registeredsubject'
-        InfantBirthFormValidator.registered_subject_model =\
+        InfantBirthFormValidator.registered_subject_model = \
             registered_subject_model
 
         maternal_lab_del_model = 'td_infant_validators.maternallabourdel'
-        InfantBirthFormValidator.maternal_lab_del_model =\
+        InfantBirthFormValidator.maternal_lab_del_model = \
             maternal_lab_del_model
 
         self.subject_identifier = '22334'
@@ -26,7 +26,7 @@ class TestInfantBirthFormValidator(TestCase):
 
         InfantBirth.objects.create(
             subject_identifier=self.subject_identifier,
-            dob=(get_utcnow() - relativedelta(months=7)).date())
+            dob=(get_utcnow() - relativedelta(months=2)).date())
 
         self.maternal_lab_del = MaternalLabourDel.objects.create(
             subject_identifier=relative_identifier,
@@ -35,8 +35,8 @@ class TestInfantBirthFormValidator(TestCase):
     def test_infant_dob_match_delivery_date(self):
         cleaned_data = {
             'subject_identifier': self.subject_identifier,
-            'report_datetime': get_utcnow() - relativedelta(months=2),
-            'dob': (get_utcnow() - relativedelta(months=2)).date()}
+            'report_datetime': self.maternal_lab_del.delivery_datetime,
+            'dob': self.maternal_lab_del.delivery_datetime.date()}
         form_validator = InfantBirthFormValidator(cleaned_data=cleaned_data)
         try:
             form_validator.validate()
@@ -46,7 +46,7 @@ class TestInfantBirthFormValidator(TestCase):
     def test_infant_dob_does_not_match_delivery_date(self):
         cleaned_data = {
             'subject_identifier': self.subject_identifier,
-            'report_datetime': get_utcnow(),
+            'report_datetime': self.maternal_lab_del.delivery_datetime,
             'dob': get_utcnow().date()}
         form_validator = InfantBirthFormValidator(cleaned_data=cleaned_data)
         self.assertRaises(ValidationError, form_validator.validate)
@@ -56,8 +56,8 @@ class TestInfantBirthFormValidator(TestCase):
         self.reg_subj.delete()
         cleaned_data = {
             'subject_identifier': self.subject_identifier,
-            'report_datetime': get_utcnow(),
-            'dob': get_utcnow().date()}
+            'report_datetime': self.maternal_lab_del.delivery_datetime,
+            'dob': self.maternal_lab_del.delivery_datetime.date()}
         form_validator = InfantBirthFormValidator(cleaned_data=cleaned_data)
         self.assertRaises(ValidationError, form_validator.validate)
         self.assertIn('__all__', form_validator._errors)
@@ -66,8 +66,8 @@ class TestInfantBirthFormValidator(TestCase):
         self.maternal_lab_del.delete()
         cleaned_data = {
             'subject_identifier': self.subject_identifier,
-            'report_datetime': get_utcnow(),
-            'dob': get_utcnow().date()}
+            'report_datetime': self.maternal_lab_del.delivery_datetime,
+            'dob': self.maternal_lab_del.delivery_datetime.date()}
         form_validator = InfantBirthFormValidator(cleaned_data=cleaned_data)
         self.assertRaises(ValidationError, form_validator.validate)
         self.assertIn('__all__', form_validator._errors)
