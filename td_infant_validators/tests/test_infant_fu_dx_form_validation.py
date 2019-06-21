@@ -69,7 +69,7 @@ class TestInfantFuDxItemsFormValidator(TestCase):
         cleaned_data = {
             'infant_visit': self.infant_visit,
             'fu_dx': ('Other abnormallaboratory tests(other than tests '
-                      'listed above  or tests done as part of this study),'
+                      'listed above or tests done as part of this study),'
                       ' specify test and result'),
             'fu_dx_specify': None}
         form_validator = InfantFuDxItemsFormValidator(
