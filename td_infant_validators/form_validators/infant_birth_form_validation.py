@@ -63,12 +63,12 @@ class InfantBirthFormValidator(CrfOffStudyFormValidator, FormValidator):
             maternal_lab_del = self.maternal_lab_del_cls.objects.get(
                 subject_identifier=maternal_identifier)
             report_datetime = cleaned_data.get('report_datetime')
-            if (report_datetime and report_datetime !=
-                    maternal_lab_del.delivery_datetime):
+            if (report_datetime and report_datetime.date() !=
+                    maternal_lab_del.delivery_datetime.date()):
                 msg = {'report_datetime':
                        'Infant report datetime must match maternal delivery date of'
-                       f' {maternal_lab_del.delivery_datetime}. '
-                       f'You wrote {report_datetime}'}
+                       f' {maternal_lab_del.delivery_datetime.date()}. '
+                       f'You wrote {report_datetime.date()}'}
                 self._errors.update(msg)
                 raise ValidationError(msg)
 
