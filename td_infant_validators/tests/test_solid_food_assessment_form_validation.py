@@ -1,7 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.test import TestCase, tag
 from edc_base.utils import get_utcnow
-from edc_constants.constants import YES
+from edc_constants.constants import YES, OTHER
 
 from ..form_validators import SolidFoodAssessementFormValidator
 from .models import Foods, InfantVisit, Appointment
@@ -22,7 +22,7 @@ class TestSolidFoodAssessementFormValidator(TestCase):
             appointment=appointment)
 
         self.solid_foods = Foods.objects.create(
-            name="Other", short_name="Other")
+            name=OTHER, short_name=OTHER)
         self.solid_foods = Foods.objects.create(
             name="Tsabana", short_name="Tsabana")
 

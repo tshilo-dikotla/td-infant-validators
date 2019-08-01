@@ -2,7 +2,7 @@ from django.core.exceptions import ValidationError
 from django.test import TestCase, tag
 from django.utils import timezone
 from edc_base.utils import get_utcnow
-from edc_constants.constants import YES, NO, NOT_APPLICABLE, UNKNOWN
+from edc_constants.constants import YES, NO, NOT_APPLICABLE
 
 from ..form_validators import InfantBirthArvFormValidator
 from .models import InfantVisit, Appointment
@@ -82,7 +82,7 @@ class TestInfantBirthArvFormValidator(TestCase):
             'infant_visit': self.infant_visit,
             'azt_after_birth': YES,
             'azt_dose_date': get_utcnow().date(),
-            'azt_additional_dose': UNKNOWN
+            'azt_additional_dose': 'Unknown'
         }
         form_validator = InfantBirthArvFormValidator(cleaned_data=cleaned_data)
         try:
@@ -95,7 +95,7 @@ class TestInfantBirthArvFormValidator(TestCase):
             'infant_visit': self.infant_visit,
             'azt_after_birth': NO,
             'azt_dose_date': None,
-            'azt_additional_dose': UNKNOWN
+            'azt_additional_dose': 'Unknown'
         }
         form_validator = InfantBirthArvFormValidator(cleaned_data=cleaned_data)
         self.assertRaises(ValidationError, form_validator.validate)
