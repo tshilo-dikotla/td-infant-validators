@@ -1,6 +1,6 @@
 from django.apps import apps as django_apps
 from django.core.exceptions import ValidationError
-from edc_constants.constants import NO, NOT_APPLICABLE, UNKNOWN
+from edc_constants.constants import NO, NOT_APPLICABLE
 from edc_form_validators import FormValidator
 
 from .crf_offstudy_form_validator import CrfOffStudyFormValidator
@@ -52,12 +52,12 @@ class InfantArvProphFormValidator(InfantFormValidatorMixin,
     def validate_taking_arv_proph_unknown(self):
         cleaned_data = self.cleaned_data
         infant_identifier = cleaned_data.get('infant_visit').subject_identifier
-        if cleaned_data.get('prophylatic_nvp') == UNKNOWN and \
+        if cleaned_data.get('prophylatic_nvp') == 'Unknown' and \
                 cleaned_data.get('arv_status') not in ['modified']:
-            if self.get_birth_arv_visit_2000(infant_identifier) not in [UNKNOWN]:
+            if self.get_birth_arv_visit_2000(infant_identifier) not in ['Unknown']:
                 msg = {'prophylatic_nvp':
                        'The azt discharge supply in Infant Birth arv was not'
-                       ' answered as UNKNOWN, Q3 cannot be Unknown.'}
+                       ' answered as \'Unknown\', Q3 cannot be Unknown.'}
                 self._errors.update(msg)
                 raise ValidationError(msg)
 
