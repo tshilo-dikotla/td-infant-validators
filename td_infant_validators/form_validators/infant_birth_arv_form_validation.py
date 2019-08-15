@@ -1,5 +1,5 @@
 from django.core.exceptions import ValidationError
-from edc_constants.constants import YES, UNKNOWN
+from edc_constants.constants import YES
 from edc_form_validators import FormValidator
 
 from .crf_offstudy_form_validator import CrfOffStudyFormValidator
@@ -29,8 +29,8 @@ class InfantBirthArvFormValidator(InfantFormValidatorMixin,
         )
 
         if (self.cleaned_data.get('azt_after_birth')
-                and self.cleaned_data.get('azt_after_birth') == UNKNOWN):
-            if self.cleaned_data.get('azt_additional_dose') != UNKNOWN:
+                and self.cleaned_data.get('azt_after_birth') == 'Unknown'):
+            if self.cleaned_data.get('azt_additional_dose') != 'Unknown':
                 msg = {'azt_additional_dose': 'If Q3 is \'Unknown\', '
                        'this field must be \'Unknown.\''}
                 self._errors.update(msg)
