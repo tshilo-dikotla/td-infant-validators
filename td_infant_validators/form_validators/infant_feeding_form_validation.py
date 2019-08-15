@@ -246,14 +246,20 @@ class InfantFeedingFormValidator(InfantFormValidatorMixin,
     def validate_most_recent_bm_range(self):
         cleaned_data = self.cleaned_data
 
-        if (self.instance.previous_infant_feeding and
+        infant_visit = cleaned_data.get('infant_visit')
+        previous_infant_feeding = self.instance.previous_infant_feeding(infant_visit)
+
+        if (previous_infant_feeding and
             (cleaned_data.get('ever_breastfeed') == YES and
                 cleaned_data.get('weaned_completely') == YES)):
+            print(previous_infant_feeding.__dict__,
+                  "\n",
+                  previous_infant_feeding.infant_visit.visit_code)
 
             if(not cleaned_data.get('most_recent_bm')
                or (cleaned_data.get('most_recent_bm') > cleaned_data.get(
                    "report_datetime").date() or cleaned_data.get(
-                       'most_recent_bm') < self.instance.previous_infant_feeding.most_recent_bm)):
+                       'most_recent_bm') < previous_infant_feeding.most_recent_bm)):
 
                 raise forms.ValidationError(
                     {'most_recent_bm': 'Date of most '
