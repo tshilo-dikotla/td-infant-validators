@@ -4,7 +4,6 @@ import os
 from setuptools import find_packages
 from setuptools import setup
 
-
 with open(os.path.join(os.path.dirname(__file__), 'README.md')) as readme:
     README = readme.read()
 
@@ -13,7 +12,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='td-infant-validators',
-    version='0.1.4',
+    version='0.1.6',
     author=u'Software Engineering & Data Management',
     author_email='se-dmc@bhp.org.bw',
     packages=find_packages(),
