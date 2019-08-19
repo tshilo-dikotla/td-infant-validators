@@ -11,7 +11,7 @@ class VaccinesMissedFormValidator(InfantFormValidatorMixin,
 
     def clean(self):
         self.subject_identifier = self.cleaned_data.get(
-            'infant_visit').appointment.subject_identifier
+            'infant_fu_immunizations').infant_visit.appointment.subject_identifier
         super().clean()
 
         self.validate_against_visit_datetime(

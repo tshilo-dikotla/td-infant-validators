@@ -18,6 +18,9 @@ class VaccinesReceivedFormValidator(InfantFormValidatorMixin,
         return django_apps.get_model(self.infant_birth_model)
 
     def clean(self):
+        self.subject_identifier = self.cleaned_data.get(
+            'infant_fu_immunizations').infant_visit.appointment.subject_identifier
+
         self.validate_against_visit_datetime(
             self.cleaned_data.get('report_datetime'))
 
