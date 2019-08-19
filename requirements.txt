@@ -2,6 +2,7 @@ git+https://github.com/botswana-harvard/edc-action-item.git@develop#egg=edc_acti
 git+https://github.com/botswana-harvard/edc-appointment.git@develop#egg=edc_appointment
 git+https://github.com/botswana-harvard/edc-base.git@develop#egg=edc_base
 git+https://github.com/botswana-harvard/edc-constants.git@develop#egg=edc_constants
+git+https://github.com/botswana-harvard/edc-facility.git@develop#egg=edc_facility
 git+https://github.com/botswana-harvard/edc-form-validators.git@develop#egg=edc_form_validators
 git+https://github.com/tshilo-dikotla/td-infant.git@develop#egg=td_infant
 git+https://github.com/botswana-harvard/django-revision.git@develop#egg=django_revision

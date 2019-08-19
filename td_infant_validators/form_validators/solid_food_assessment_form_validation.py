@@ -50,7 +50,7 @@ class SolidFoodAssessementFormValidator(InfantFormValidatorMixin,
             )
 
         self.m2m_other_specify(
-            OTHER,
+            'Other',
             m2m_field='solid_foods',
             field_other='solid_foods_other'
         )
