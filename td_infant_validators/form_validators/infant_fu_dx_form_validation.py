@@ -14,7 +14,7 @@ class InfantFuDxFormValidator(InfantFormValidatorMixin,
             'infant_visit').appointment.subject_identifier
         self.validate_against_visit_datetime(
             self.cleaned_data.get('report_datetime'))
-        super.clean()
+        super().clean()
 
 
 class InfantFuDxItemsFormValidator(InfantFormValidatorMixin, FormValidator):
