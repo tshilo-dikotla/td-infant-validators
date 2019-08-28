@@ -2,13 +2,10 @@ from django.apps import apps as django_apps
 from django.core.exceptions import ValidationError
 from edc_constants.constants import YES
 from edc_form_validators import FormValidator
-
-from .crf_offstudy_form_validator import CrfOffStudyFormValidator
 from .form_validator_mixin import InfantFormValidatorMixin
 
 
 class VaccinesReceivedFormValidator(InfantFormValidatorMixin,
-                                    CrfOffStudyFormValidator,
                                     FormValidator):
 
     infant_birth_model = 'td_infant.infantbirth'
