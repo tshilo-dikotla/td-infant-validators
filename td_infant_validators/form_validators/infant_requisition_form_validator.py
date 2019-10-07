@@ -1,5 +1,5 @@
 from django.core.exceptions import ValidationError
-from edc_constants.constants import YES, NO
+from edc_constants.constants import YES
 from edc_form_validators import FormValidator
 
 from .crf_offstudy_form_validator import CrfOffStudyFormValidator
@@ -33,21 +33,21 @@ class InfantRequisitionFormValidator(InfantFormValidatorMixin,
         volume_units = self.cleaned_data.get('volume_units')
         estimated_volume = self.cleaned_data.get('estimated_volume')
 
-        if panel == 'infant_paxgene':
-            if volume_units != 'Drops':
-                raise ValidationError({
-                    'volume_units': 'Volume units for paxgene '
-                    'should be in drops'})
+        if self.cleaned_data.get('is_drawn') == YES:
+            if panel == 'infant_paxgene':
+                if volume_units != 'Drops':
+                    raise ValidationError({
+                        'volume_units': 'Volume units for paxgene '
+                        'should be in drops'})
 
-            if estimated_volume and \
-                    estimated_volume not in range(5, 11):
+                if estimated_volume and \
+                        estimated_volume not in range(5, 11):
                     raise ValidationError({
                         'estimated_volume': 'Volume value for paxgene'
                         ' should be between 5 -10 drops'})
-        else:
-            if volume_units and volume_units == 'Drops':
-                raise ValidationError({
-                    'volume_units': f'Volume units for {panel} '
-                    'should be in mL'})
+            else:
+                if volume_units and volume_units == 'Drops':
+                    raise ValidationError({
+                        'volume_units': f'Volume units for {panel} '
+                        'should be in mL'})
         super().clean()
-
