@@ -5,9 +5,9 @@ from edc_action_item.site_action_items import site_action_items
 from edc_constants.constants import ON_STUDY, NEW, NO, OFF_STUDY, YES, OTHER
 from edc_constants.constants import PARTICIPANT, ALIVE, DEAD
 from edc_form_validators import FormValidator
+from edc_visit_tracking.constants import COMPLETED_PROTOCOL_VISIT
 from edc_visit_tracking.constants import SCHEDULED, LOST_VISIT, MISSED_VISIT
 from edc_visit_tracking.form_validators import VisitFormValidator
-
 from td_prn.action_items import INFANTOFF_STUDY_ACTION
 
 from .crf_offstudy_form_validator import CrfOffStudyFormValidator
@@ -79,6 +79,12 @@ class InfantVisitFormValidator(VisitFormValidator, CrfOffStudyFormValidator,
         if (reason == LOST_VISIT and
                 self.cleaned_data.get('study_status') != OFF_STUDY):
             msg = {'study_status': 'Participant has been lost to follow up, '
+                   'study status should be off study.'}
+            self._errors.update(msg)
+            raise ValidationError(msg)
+        if (reason == COMPLETED_PROTOCOL_VISIT and
+                self.cleaned_data.get('study_status') != OFF_STUDY):
+            msg = {'study_status': 'Participant is completing protocol, '
                    'study status should be off study.'}
             self._errors.update(msg)
             raise ValidationError(msg)
