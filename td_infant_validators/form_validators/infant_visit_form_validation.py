@@ -1,12 +1,12 @@
 from django import forms
 from django.apps import apps as django_apps
 from django.core.exceptions import ValidationError
-from edc_constants.constants import ON_STUDY, NEW, NO, OFF_STUDY, YES
+from edc_action_item.site_action_items import site_action_items
+from edc_constants.constants import ON_STUDY, NEW, NO, OFF_STUDY, YES, OTHER
 from edc_constants.constants import PARTICIPANT, ALIVE, DEAD
 from edc_form_validators import FormValidator
-
-from edc_action_item.site_action_items import site_action_items
-from edc_visit_tracking.constants import SCHEDULED, LOST_VISIT
+from edc_visit_tracking.constants import COMPLETED_PROTOCOL_VISIT
+from edc_visit_tracking.constants import SCHEDULED, LOST_VISIT, MISSED_VISIT
 from edc_visit_tracking.form_validators import VisitFormValidator
 from td_prn.action_items import INFANTOFF_STUDY_ACTION
 
@@ -50,7 +50,7 @@ class InfantVisitFormValidator(VisitFormValidator, CrfOffStudyFormValidator,
             karabo_screening = karabo_screening_model_cls.objects.get(
                 subject_identifier=self.subject_identifier[:-3])
         except karabo_screening_model_cls.DoesNotExist:
-                pass
+            pass
         else:
             if karabo_screening.is_eligible:
                 try:
@@ -79,6 +79,12 @@ class InfantVisitFormValidator(VisitFormValidator, CrfOffStudyFormValidator,
         if (reason == LOST_VISIT and
                 self.cleaned_data.get('study_status') != OFF_STUDY):
             msg = {'study_status': 'Participant has been lost to follow up, '
+                   'study status should be off study.'}
+            self._errors.update(msg)
+            raise ValidationError(msg)
+        if (reason == COMPLETED_PROTOCOL_VISIT and
+                self.cleaned_data.get('study_status') != OFF_STUDY):
+            msg = {'study_status': 'Participant is completing protocol, '
                    'study status should be off study.'}
             self._errors.update(msg)
             raise ValidationError(msg)
@@ -130,7 +136,8 @@ class InfantVisitFormValidator(VisitFormValidator, CrfOffStudyFormValidator,
 
         try:
             action_item = action_item_model_cls.objects.get(
-                subject_identifier=self.cleaned_data.get('appointment').subject_identifier,
+                subject_identifier=self.cleaned_data.get(
+                    'appointment').subject_identifier,
                 action_type__name=INFANTOFF_STUDY_ACTION,
                 status=NEW)
         except action_item_model_cls.DoesNotExist:
@@ -151,3 +158,15 @@ class InfantVisitFormValidator(VisitFormValidator, CrfOffStudyFormValidator,
                 raise forms.ValidationError(
                     'Participant is scheduled to go offstudy.'
                     ' Cannot edit visit until offstudy form is completed.')
+
+    def validate_required_fields(self):
+
+        self.required_if(
+            MISSED_VISIT,
+            field='reason',
+            field_required='reason_missed')
+
+        self.required_if(
+            OTHER,
+            field='info_source',
+            field_required='info_source_other')
