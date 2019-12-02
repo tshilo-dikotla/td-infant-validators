@@ -247,24 +247,22 @@ class InfantFeedingFormValidator(InfantFormValidatorMixin,
         cleaned_data = self.cleaned_data
 
         infant_visit = cleaned_data.get('infant_visit')
-        previous_infant_feeding = self.instance.previous_infant_feeding(infant_visit)
+        previous_infant_feeding = self.instance.previous_infant_feeding(
+            infant_visit)
 
         if (previous_infant_feeding and
             (cleaned_data.get('ever_breastfeed') == YES and
                 cleaned_data.get('weaned_completely') == YES)):
-            print(previous_infant_feeding.__dict__,
-                  "\n",
-                  previous_infant_feeding.infant_visit.visit_code)
+            if previous_infant_feeding.most_recent_bm:
+                if(not cleaned_data.get('most_recent_bm')
+                   or (cleaned_data.get('most_recent_bm') > cleaned_data.get(
+                       "report_datetime").date() or cleaned_data.get(
+                           'most_recent_bm') < previous_infant_feeding.most_recent_bm)):
 
-            if(not cleaned_data.get('most_recent_bm')
-               or (cleaned_data.get('most_recent_bm') > cleaned_data.get(
-                   "report_datetime").date() or cleaned_data.get(
-                       'most_recent_bm') < previous_infant_feeding.most_recent_bm)):
-
-                raise forms.ValidationError(
-                    {'most_recent_bm': 'Date of most '
-                     'recent breastfeeding must be '
-                     'between last visit date and today.'})
+                    raise forms.ValidationError(
+                        {'most_recent_bm': 'Date of most '
+                         'recent breastfeeding must be '
+                         'between last visit date and today.'})
 
     @property
     def infant_feeding_cls(self):
