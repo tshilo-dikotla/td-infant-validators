@@ -1,6 +1,6 @@
 import datetime
 from django.core.exceptions import ValidationError
-from edc_constants.constants import YES
+from edc_constants.constants import YES, NOT_APPLICABLE
 from edc_form_validators import FormValidator
 
 from .form_validator_mixin import InfantFormValidatorMixin
@@ -12,8 +12,6 @@ class InfantCovidScreeningFormValidator(InfantFormValidatorMixin,
     def clean(self):
         self.subject_identifier = self.cleaned_data.get(
             'infant_visit').subject_identifier
-
-        super().clean()
 
         self.validate_against_visit_datetime(
             self.cleaned_data.get('report_datetime'))
@@ -40,6 +38,12 @@ class InfantCovidScreeningFormValidator(InfantFormValidatorMixin,
                 field_required=value)
 
         self.validate_covid_test_date('household_test_date')
+
+        self.m2m_single_selection_if(
+            NOT_APPLICABLE,
+            m2m_field='covid_symptoms')
+
+        super().clean()
 
     def validate_covid_test_date(self, test_date):
 
