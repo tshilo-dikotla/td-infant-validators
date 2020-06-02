@@ -30,7 +30,9 @@ class InfantVisitFormValidator(VisitFormValidator, CrfOffStudyFormValidator,
 
         self.validate_other_specify('information_provider')
 
-        self.validate_study_status()
+        if self.instance:
+            if not self.instance.id:
+                self.validate_study_status()
 
         self.validate_death()
 
