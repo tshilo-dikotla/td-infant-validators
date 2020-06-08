@@ -2,6 +2,8 @@ from dateutil.relativedelta import relativedelta
 from django.core.exceptions import ValidationError
 from django.test import TestCase, tag
 from edc_base.utils import get_utcnow
+from edc_constants.constants import ALIVE, NO
+from edc_constants.constants import YES, ON_STUDY
 
 from ..form_validators import InfantVisitFormValidator
 from .models import Appointment, MaternalConsent, InfantBirth
@@ -57,3 +59,39 @@ class TestInfantVisitFormValidator(TestCase):
             form_validator.validate()
         except ValidationError as e:
             self.fail(f'ValidationError unexpectedly raised. Got{e}')
+
+    def test_study_covid_visit_valid(self):
+
+        cleaned_data = {
+            'report_datetime': get_utcnow(),
+            'survival_status': ALIVE,
+            'last_alive_date': get_utcnow().date(),
+            'study_status': ON_STUDY,
+            'appointment': self.appointment,
+            'covid_visit': YES,
+            'is_present': NO
+        }
+
+        form_validator = InfantVisitFormValidator(
+            cleaned_data=cleaned_data)
+        try:
+            form_validator.validate()
+        except ValidationError as e:
+            self.fail(f'ValidationError unexpectedly raised. Got{e}')
+
+    def test_study_covid_visit_invalid(self):
+
+        cleaned_data = {
+            'report_datetime': get_utcnow(),
+            'survival_status': ALIVE,
+            'last_alive_date': get_utcnow().date(),
+            'study_status': ON_STUDY,
+            'appointment': self.appointment,
+            'covid_visit': YES,
+            'is_present': YES
+        }
+
+        form_validator = InfantVisitFormValidator(
+            cleaned_data=cleaned_data)
+        self.assertRaises(ValidationError, form_validator.validate)
+        self.assertIn('is_present', form_validator._errors)
