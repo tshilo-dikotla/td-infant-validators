@@ -30,6 +30,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+DEFAULT_STUDY_SITE = 40
 # AUTO_CREATE_KEYS = True
 # Application definition
 
@@ -44,12 +45,17 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_crypto_fields.apps.AppConfig',
+    'edc_action_item.apps.AppConfig',
+    'edc_appointment.apps.AppConfig',
     'edc_base.apps.AppConfig',
     'edc_device.apps.AppConfig',
-    'edc_action_item.apps.AppConfig',
+    'edc_lab.apps.AppConfig',
+    'edc_timepoint.apps.AppConfig',
     'edc_protocol.apps.AppConfig',
     'td_prn.apps.AppConfig',
-    'td_infant_validators.apps.AppConfig'
+    'td_infant_validators.apps.AppConfig',
+    'td_maternal.apps.AppConfig',
+    'td_infant_validators.apps.EdcVisitTrackingAppConfig'
 ]
 
 MIDDLEWARE = [

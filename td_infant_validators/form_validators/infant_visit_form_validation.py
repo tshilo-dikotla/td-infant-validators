@@ -32,6 +32,8 @@ class InfantVisitFormValidator(VisitFormValidator, CrfOffStudyFormValidator,
 
         self.validate_study_status()
 
+        self.validate_covid_visit_not_present()
+
         self.validate_death()
 
         self.validate_is_present()
@@ -39,6 +41,15 @@ class InfantVisitFormValidator(VisitFormValidator, CrfOffStudyFormValidator,
         self.validate_last_alive_date()
 
         self.validate_is_karabo_eligible()
+
+    def validate_covid_visit_not_present(self):
+        if (self.cleaned_data.get('covid_visit') == YES
+                and self.cleaned_data.get('is_present') == YES):
+            msg = {'is_present': 'This visit is indicated as a telephonic '
+                   'visit occurring during COVID-19. The participant cannot '
+                   'be present.'}
+            self._errors.update(msg)
+            raise ValidationError(msg)
 
     def validate_is_karabo_eligible(self):
         karabo_consent_model_cls = django_apps.get_model(
