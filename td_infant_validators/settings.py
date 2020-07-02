@@ -54,7 +54,6 @@ INSTALLED_APPS = [
     'edc_protocol.apps.AppConfig',
     'td_prn.apps.AppConfig',
     'td_infant_validators.apps.AppConfig',
-    'td_maternal.apps.AppConfig',
     'td_infant_validators.apps.EdcVisitTrackingAppConfig'
 ]
 

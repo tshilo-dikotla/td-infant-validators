@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from dateutil.relativedelta import relativedelta
 from django.core.exceptions import ValidationError
 from django.test import TestCase
@@ -71,3 +73,34 @@ class TestInfantBirthFormValidator(TestCase):
         form_validator = InfantBirthFormValidator(cleaned_data=cleaned_data)
         self.assertRaises(ValidationError, form_validator.validate)
         self.assertIn('__all__', form_validator._errors)
+
+    def test_infant_enrollment_date_match_delivery_date(self):
+        cleaned_data = {
+            'subject_identifier': self.subject_identifier,
+            'report_datetime': self.maternal_lab_del.delivery_datetime,
+            'dob': self.maternal_lab_del.delivery_datetime.date()}
+        form_validator = InfantBirthFormValidator(cleaned_data=cleaned_data)
+        try:
+            form_validator.validate()
+        except ValidationError as e:
+            self.fail(f'ValidationError unexpectedly raised. Got{e}')
+
+    def test_infant_enrollment_date_after_delivery_date(self):
+        cleaned_data = {
+            'subject_identifier': self.subject_identifier,
+            'report_datetime': self.maternal_lab_del.delivery_datetime + timedelta(days=3),
+            'dob': self.maternal_lab_del.delivery_datetime.date()}
+        form_validator = InfantBirthFormValidator(cleaned_data=cleaned_data)
+        try:
+            form_validator.validate()
+        except ValidationError as e:
+            self.fail(f'ValidationError unexpectedly raised. Got{e}')
+
+    def test_infant_enrollment_date_before_delivery_date(self):
+        cleaned_data = {
+            'subject_identifier': self.subject_identifier,
+            'report_datetime': self.maternal_lab_del.delivery_datetime - timedelta(days=3),
+            'dob': self.maternal_lab_del.delivery_datetime.date()}
+        form_validator = InfantBirthFormValidator(cleaned_data=cleaned_data)
+        self.assertRaises(ValidationError, form_validator.validate)
+        self.assertIn('report_datetime', form_validator._errors)
