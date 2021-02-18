@@ -82,7 +82,7 @@ class VaccinesReceivedFormValidator(InfantFormValidatorMixin,
 
     def validate_hepatitis_vaccine(self, cleaned_data=None):
         if cleaned_data.get('received_vaccine_name') == 'Hepatitis_B':
-            if cleaned_data.get('infant_age') not in ['At Birth', '2', '3', '4']:
+            if cleaned_data.get('infant_age') not in ['At Birth', '2', '3', '4', 'catch_up_vaccine']:
                 msg = {'infant_age':
                        'Hepatitis B can only be administered '
                        'at birth or 2 or 3 or 4 months of infant life'}
@@ -91,7 +91,7 @@ class VaccinesReceivedFormValidator(InfantFormValidatorMixin,
 
     def validate_dpt_vaccine(self, cleaned_data=None):
         if cleaned_data.get('received_vaccine_name') == 'DPT':
-            if cleaned_data.get('infant_age') not in ['2', '3', '4']:
+            if cleaned_data.get('infant_age') not in ['2', '3', '4', 'catch_up_vaccine']:
                 msg = {'infant_age':
                        'DPT. Diphtheria, Pertussis and Tetanus can only '
                        'be administered at 2 or 3 or 4 months ONLY.'}
@@ -100,7 +100,7 @@ class VaccinesReceivedFormValidator(InfantFormValidatorMixin,
 
     def validate_haemophilus_vaccine(self, cleaned_data=None):
         if cleaned_data.get('received_vaccine_name') == 'Haemophilus_influenza':
-            if cleaned_data.get('infant_age') not in ['2', '3', '4']:
+            if cleaned_data.get('infant_age') not in ['2', '3', '4', 'catch_up_vaccine']:
                 msg = {'infant_age':
                        'Haemophilus Influenza B vaccine can only be given '
                        'at 2 or 3 or 4 months of infant life.'}
@@ -109,7 +109,7 @@ class VaccinesReceivedFormValidator(InfantFormValidatorMixin,
 
     def validate_pcv_vaccine(self, cleaned_data=None):
         if cleaned_data.get('received_vaccine_name') == 'PCV_Vaccine':
-            if cleaned_data.get('infant_age') not in ['2', '3', '4']:
+            if cleaned_data.get('infant_age') not in ['2', '3', '4', 'catch_up_vaccine']:
                 msg = {'infant_age':
                        'The PCV [Pneumonia Conjugated Vaccine], can ONLY be '
                        'administered at 2 or 3 or 4 months of infant life.'}
@@ -118,7 +118,7 @@ class VaccinesReceivedFormValidator(InfantFormValidatorMixin,
 
     def validate_polio_vaccine(self, cleaned_data=None):
         if cleaned_data.get('received_vaccine_name') == 'Polio':
-            if cleaned_data.get('infant_age') not in ['2', '3', '4', '18']:
+            if cleaned_data.get('infant_age') not in ['2', '3', '4', '18', 'catch_up_vaccine']:
                 msg = {'infant_age':
                        'Polio vaccine can only be administered at '
                        '2 or 3 or 4 or 18 months of infant life'}
@@ -127,7 +127,7 @@ class VaccinesReceivedFormValidator(InfantFormValidatorMixin,
 
     def validate_rotavirus_vaccine(self, cleaned_data=None):
         if cleaned_data.get('received_vaccine_name') == 'Rotavirus':
-            if cleaned_data.get('infant_age') not in ['2', '3']:
+            if cleaned_data.get('infant_age') not in ['2', '3', 'catch_up_vaccine']:
                 msg = {'infant_age':
                        'Rotavirus is only administered at 2 or 3 months '
                        'of infant life'}
@@ -136,7 +136,7 @@ class VaccinesReceivedFormValidator(InfantFormValidatorMixin,
 
     def validate_measles_vaccine(self, cleaned_data=None):
         if cleaned_data.get('received_vaccine_name') == 'Measles':
-            if cleaned_data.get('infant_age') not in ['9', '18']:
+            if cleaned_data.get('infant_age') not in ['9', '18', 'catch_up_vaccine']:
                 msg = {'infant_age':
                        'Measles vaccine is only administered at 9 or 18 '
                        'months of infant life.'}
@@ -145,7 +145,7 @@ class VaccinesReceivedFormValidator(InfantFormValidatorMixin,
 
     def validate_pentavalent_vaccine(self, cleaned_data=None):
         if (cleaned_data.get('received_vaccine_name') == 'Pentavalent' and
-                cleaned_data.get('infant_age') not in ['2', '3', '4']):
+                cleaned_data.get('infant_age') not in ['2', '3', '4', 'catch_up_vaccine']):
             msg = {'infant_age':
                    'The Pentavalent vaccine can only be administered '
                    'at 2 or 3 or 4 months of infant life.'}
@@ -157,7 +157,8 @@ class VaccinesReceivedFormValidator(InfantFormValidatorMixin,
                 cleaned_data.get('infant_age') not in ['6-11', '9', '9-12',
                                                        '12-17', '18', '18-29',
                                                        '24-29', '30-35',
-                                                       '36-41', '42-47']):
+                                                       '36-41', '42-47',
+                                                       'catch_up_vaccine']):
             msg = {'infant_age':
                    'Vitamin A is given to children between 6-41 months '
                    'of life'}
@@ -166,7 +167,7 @@ class VaccinesReceivedFormValidator(InfantFormValidatorMixin,
 
     def validate_ipv_vaccine(self, cleaned_data=None):
         if (cleaned_data.get('received_vaccine_name') == 'inactivated_polio_vaccine' and
-                cleaned_data.get('infant_age') not in ['4', '9-12']):
+                cleaned_data.get('infant_age') not in ['4', '9-12', 'catch_up_vaccine']):
             msg = {'infant_age':
                    'IPV vaccine is only given at 4 Months. '
                    'of life or 9-12 months'}
@@ -175,7 +176,7 @@ class VaccinesReceivedFormValidator(InfantFormValidatorMixin,
 
     def validate_diptheria_tetanus_vaccine(self, cleaned_data=None):
         if cleaned_data.get('received_vaccine_name') == 'diphtheria_tetanus':
-            if cleaned_data.get('infant_age') not in ['18']:
+            if cleaned_data.get('infant_age') not in ['18', 'catch_up_vaccine']:
                 msg = {'infant_age':
                        'Measles vaccine is only administered at 18 '
                        'months of infant life.'}
