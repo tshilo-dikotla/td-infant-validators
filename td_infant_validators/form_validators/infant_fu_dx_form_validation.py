@@ -36,6 +36,9 @@ class InfantFuDxItemsFormValidator(InfantFormValidatorMixin, FormValidator):
             field_required='fu_dx_specify'
         )
 
+        if self.cleaned_data.get('fu_dx_specify'):
+            self.cleaned_data['fu_dx_specify'] = self.cleaned_data.get('fu_dx_specify').capitalize()
+
     def validate_health_facility(self, cleaned_data=None):
         if cleaned_data.get('health_facility') == NO:
             if cleaned_data.get('was_hospitalized') == YES:
